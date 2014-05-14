@@ -174,12 +174,10 @@ public class Partition implements GrammarTreeNode {
 		return "Partition";
 	}
 
-	@Override
 	public void createTotalOrderVector() {
 		
 	}
 
-	@Override
 	public void emptyState() {
 		this.trace.emptyState();
 	}

@@ -335,7 +335,7 @@ public class Tokenizer extends Lexer {
 						|| (input.LA(1) >= ':' && input.LA(1) <= '@')
 						|| (input.LA(1) >= '[' && input.LA(1) <= '`')
 						|| (input.LA(1) >= '{' && input.LA(1) <= '~')
-						|| input.LA(1) == '???') {
+						|| input.LA(1) == '€') {
 					input.consume();
 					state.failed = false;
 				} else {
@@ -463,7 +463,7 @@ public class Tokenizer extends Lexer {
 						|| (input.LA(1) >= ':' && input.LA(1) <= '@')
 						|| (input.LA(1) >= '[' && input.LA(1) <= '`')
 						|| (input.LA(1) >= '{' && input.LA(1) <= '~')
-						|| input.LA(1) == '???') {
+						|| input.LA(1) == '€') {
 					input.consume();
 					state.failed = false;
 				} else {
@@ -810,7 +810,7 @@ public class Tokenizer extends Lexer {
 		case '|':
 		case '}':
 		case '~':
-		case '???': {
+		case '€': {
 			alt3 = 5;
 		}
 			break;
@@ -922,7 +922,7 @@ public class Tokenizer extends Lexer {
 					|| (input.LA(1) >= ':' && input.LA(1) <= '@')
 					|| (input.LA(1) >= '[' && input.LA(1) <= '`')
 					|| (input.LA(1) >= '{' && input.LA(1) <= '~')
-					|| input.LA(1) == '???') {
+					|| input.LA(1) == '€') {
 				input.consume();
 				state.failed = false;
 			} else {

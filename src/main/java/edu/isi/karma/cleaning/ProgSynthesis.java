@@ -8,7 +8,6 @@ import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.isi.karma.cleaning.ExampleCluster.method;
 import edu.isi.karma.cleaning.Research.ConfigParameters;
 import edu.isi.karma.cleaning.Research.Prober;
 import edu.isi.karma.cleaning.features.Feature;

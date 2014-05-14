@@ -5,8 +5,6 @@ import java.util.Vector;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
-import edu.isi.karma.webserver.ServletContextParameterMap;
-import edu.isi.karma.webserver.ServletContextParameterMap.ContextParameter;
 
 public class PartitionClassifier {
 	private PyObject interpreterClass;
@@ -14,8 +12,7 @@ public class PartitionClassifier {
 	public String[] vocabs;
 
 	public PartitionClassifier() {
-		String dirpathString = ServletContextParameterMap
-				.getParameterValue(ContextParameter.PYTHON_SCRIPTS_DIRECTORY);
+		String dirpathString = "";
 		if (dirpathString.compareTo("") == 0) {
 			dirpathString = "./src/main/scripts/Lib";
 		}

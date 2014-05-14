@@ -131,7 +131,6 @@ public class LogisticModelParameters implements Writable {
 		}
 	}
 
-	@Override
 	public void write(DataOutput out) throws IOException {
 		out.writeUTF(targetVariable);
 		out.writeInt(typeMap.size());
@@ -152,7 +151,6 @@ public class LogisticModelParameters implements Writable {
 		lr.write(out);
 	}
 
-	@Override
 	public void readFields(DataInput in) throws IOException {
 		targetVariable = in.readUTF();
 		int typeMapSize = in.readInt();

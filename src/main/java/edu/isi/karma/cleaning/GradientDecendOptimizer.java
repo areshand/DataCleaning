@@ -1,17 +1,11 @@
 package edu.isi.karma.cleaning;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Test;
-import org.python.antlr.PythonParser.print_stmt_return;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.isi.karma.cleaning.Research.Prober;
-import edu.isi.karma.cleaning.Research.TestTools;
-import edu.isi.karma.cleaning.features.RecordClassifier;
 
 public class GradientDecendOptimizer {
 	public double c_coef = 1;

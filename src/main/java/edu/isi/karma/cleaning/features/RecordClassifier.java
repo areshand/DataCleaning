@@ -86,7 +86,6 @@ public class RecordClassifier implements PartitionClassifierType {
 		}
 	}
 
-	@Override
 	public void addTrainingData(String value, String label) {
 		// convert value to feature vector
 		rawData.add(value);
@@ -263,7 +262,7 @@ public class RecordClassifier implements PartitionClassifierType {
 
 	@Override
 	public String learnClassifer() {
-		dignose();
+		//dignose();
 		this.parameterselectionandScale();
 		return "";
 	}

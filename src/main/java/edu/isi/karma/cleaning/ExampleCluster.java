@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Vector;
 
 import org.apache.commons.math.optimization.linear.LinearConstraint;

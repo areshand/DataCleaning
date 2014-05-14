@@ -48,13 +48,11 @@ public class Section implements GrammarTreeNode {
 
 	}
 
-	@Override
 	public String toProgram() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public GrammarTreeNode mergewith(GrammarTreeNode a) {
 		Section sec = (Section) a;
 		Position x = this.pair[0].mergewith(sec.pair[0]);
@@ -87,12 +85,10 @@ public class Section implements GrammarTreeNode {
 		}
 	}
 
-	@Override
 	public String getNodeType() {
 		return "section";
 	}
 
-	@Override
 	public double getScore() {
 		// TODO Auto-generated method stub
 		return this.pair[0].getScore() + this.pair[1].getScore();

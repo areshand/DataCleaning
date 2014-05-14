@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.mahout.common.parameters.StringParameter;
-import org.junit.Test;
-
-import com.sun.tools.xjc.generator.bean.field.NoExtendedContentField;
-
 
 public class MultiIndex {
 	public String value = "";
@@ -131,7 +126,6 @@ public class MultiIndex {
 			}
 		}
 	}
-	@Test
 	public void testMultiIndex()
 	{
 		String[] keys1 = {"e1", "segmentloopsegment", "1"};

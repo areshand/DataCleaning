@@ -141,13 +141,11 @@ public class Program implements GrammarTreeNode {
 		return "Program";
 	}
 
-	@Override
 	public void createTotalOrderVector() {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void emptyState() {
 		// TODO Auto-generated method stub
 		for(Partition p:partitions)
