@@ -9,6 +9,7 @@ public class Program implements GrammarTreeNode {
 	public double score = 0.0;
 	public PartitionClassifierType classifier;
 	public DataPreProcessor dpPreProcessor;
+	public String program = "null";
 
 	public Program(Vector<Partition> pars, PartitionClassifierType classifier, DataPreProcessor dpp) {
 		this.partitions = pars;
@@ -22,7 +23,6 @@ public class Program implements GrammarTreeNode {
 		{
 			this.classifier = classifier;
 		}
-		
 		this.emptyState();
 	}
 
@@ -58,10 +58,12 @@ public class Program implements GrammarTreeNode {
 			score = score / this.partitions.size();
 			res = res.substring(0, res.length() - 1);
 			res += "])";
+			this.program = res;
 			return res;
 		} else {
 			String s = partitions.get(0).toProgram();
 			score = this.partitions.get(0).getScore();
+			this.program = s;
 			return s;
 		}
 	}
@@ -160,5 +162,10 @@ public class Program implements GrammarTreeNode {
 			size += p.size();
 		}
 		return size;
+	}
+
+	@Override
+	public String getProgram() {
+		return this.program;
 	}
 }

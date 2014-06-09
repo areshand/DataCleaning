@@ -1,5 +1,6 @@
 package edu.isi.karma.cleaning;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class ProgSynthesis {
 	private static Logger ulogger = LoggerFactory
 			.getLogger(ProgSynthesis.class);
 	public Program myprog;
-	public OptimizePartition partitioner;
+	public OptimizePartition partitioner; // A* search for a consistent program
 	public ExampleCluster partiCluster;
 	public DataPreProcessor dataPreProcessor;
 	public Messager msGer;
@@ -229,7 +230,7 @@ public class ProgSynthesis {
 		 */
 		return pars;
 	}
-
+	
 	public Collection<ProgramRule> producePrograms(Vector<Partition> pars) {
 		Program prog = new Program(pars, this.classifier,this.dataPreProcessor);
 		this.myprog = prog;
@@ -274,23 +275,26 @@ public class ProgSynthesis {
 	public Collection<ProgramRule> run_main() {
 		long t1 = System.currentTimeMillis();
 		Vector<Partition> vp = this.ProducePartitions(true);
-		long t2 = System.currentTimeMillis();
 		Collection<ProgramRule> cpr = this.producePrograms(vp);
 		Prober.trackProgram(vp, cpr.iterator().next());
-		long t3 = System.currentTimeMillis();
-		learnspan = (t3 - t1);
-		genspan = (t3 - t2);
-//		if (cpr == null || cpr.size() == 0) {
-//			t1 = System.currentTimeMillis();
-//			vp = this.ProducePartitions(false);
-//			t2 = System.currentTimeMillis();
-//			cpr = this.producePrograms(vp);
-//			t3 = System.currentTimeMillis();
-//			learnspan += t3 - t1;
-//			genspan += t3 - t2;
-//		}
 		Traces.AllSegs.clear();
 		return cpr;
+	}
+	public Collection<ProgramRule> run_adaptation(ProgramRule rule, String[] newExample)
+	{
+		ArrayList<ProgramRule> rules = new ArrayList<ProgramRule>();
+		//Extract traces set
+		Traces t = msGer.expTraces.createTrace(newExample);
+		// convert the programRule into a grammar Tree
+		String prog = rule.getStringRule(rule.getClassForValue(newExample[0]));
+		ProgramParser parser = new ProgramParser();
+		ParseTreeNode root = parser.parse(prog);
+		//identify the incorrect subprogram and corresponding tracNodes of all examples
+		
+		//relearn the subprogram
+		
+		//update the programRule
+		
 	}
 
 	public String validRule(ProgramRule p, Vector<Partition> vp) {

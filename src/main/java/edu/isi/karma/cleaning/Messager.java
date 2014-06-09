@@ -6,6 +6,7 @@ import java.util.Vector;
 public class Messager {
 	double[] weights = null;
 	Vector<Vector<String[]>> cm_constr = new Vector<Vector<String[]>>();
+	ExampleTraces expTraces = new ExampleTraces();
 	public Messager()
 	{
 		

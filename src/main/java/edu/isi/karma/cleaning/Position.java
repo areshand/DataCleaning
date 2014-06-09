@@ -20,6 +20,7 @@ public class Position implements GrammarTreeNode {
 	public int curState = 0;
 	public static Interpretor itInterpretor = null;
 	public int fixedlength = 0;
+	public String program = "null";
 
 	public Position(Vector<Integer> absPos, Vector<TNode> lcxt,
 			Vector<TNode> rcxt, Vector<String> orgStrings,
@@ -300,6 +301,7 @@ public class Position implements GrammarTreeNode {
 			if (isinloop) {
 				// replace the counter with number and verify it
 				if (rule.indexOf("counter") == -1) {
+					this.program = "null";
 					return "null";
 				}
 				boolean isvalid = true;
@@ -318,7 +320,10 @@ public class Position implements GrammarTreeNode {
 						cnt++;
 					}
 					if (r.length() <= 1)
+					{
+						this.program = "null";
 						return "null";
+					}
 					if (this.tarStrings.get(j).compareTo(
 							r.substring(0, r.length() - 1)) != 0) {
 						isvalid = false;
@@ -327,7 +332,10 @@ public class Position implements GrammarTreeNode {
 				}
 				if (isvalid) {
 					if (itercnt == 0)
+					{
+						this.program = rule;
 						return rule;
+					}
 					else
 						itercnt--; // valid number - 1
 				}
@@ -344,12 +352,16 @@ public class Position implements GrammarTreeNode {
 				}
 				if (isValid) {
 					if (itercnt == 0)
+					{
+						this.program = rule;
 						return rule;
+					}
 					else
 						itercnt--;
 				}
 			}
 		}
+		this.program = "null";
 		return "null";
 	}
 
@@ -432,5 +444,10 @@ public class Position implements GrammarTreeNode {
 
 	public String getrepString() {
 		return this.toString();
+	}
+
+	@Override
+	public String getProgram() {
+		return this.program;
 	}
 }

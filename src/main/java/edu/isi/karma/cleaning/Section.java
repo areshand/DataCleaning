@@ -13,6 +13,7 @@ public class Section implements GrammarTreeNode {
 	public Vector<String> tarStrings = new Vector<String>();
 	public static Interpretor itInterpretor = null;
 	public static final int supermode = 1;
+	public String program = "null";
 
 	public Section(Position[] p, Vector<String> orgStrings,
 			Vector<String> tarStrings, boolean isinloop) {
@@ -38,14 +39,15 @@ public class Section implements GrammarTreeNode {
 			curState++;
 			if (rule1.indexOf("null") == -1 && rule2.indexOf("null") == -1) {
 				rule = String.format("substr(value,%s,%s)", rule1, rule2);
+				this.program = rule;
 				return rule;
 			}
 			if (rule1.indexOf("null") != -1 && rule2.indexOf("null") != -1) {
 				break;
 			}
 		}
+		this.program = "null";
 		return "null";
-
 	}
 
 	public String toProgram() {
@@ -178,6 +180,11 @@ public class Section implements GrammarTreeNode {
 			rp = pair[1].toString();
 		}
 		return lp + rp;
+	}
+
+	@Override
+	public String getProgram() {
+		return this.program;
 	}
 
 }

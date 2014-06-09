@@ -20,9 +20,10 @@ public class Segment implements GrammarTreeNode {
 	public boolean isinloop = false;
 	public Vector<TNode> constNodes = new Vector<TNode>();
 	public String repString = "";
-	private int curState = -1;
+	public int curState = -1;
 	public Vector<String> segStrings = new Vector<String>();
 	public int VersionSP_size = 0;
+	public String program = "null";
 
 	public Segment(Vector<TNode> cont) {
 		constNodes = cont;
@@ -104,15 +105,28 @@ public class Segment implements GrammarTreeNode {
 				mdString += t.text;
 			}
 			mdString = "\'" + mdString + "\'";
+			this.program = mdString;
 			return mdString;
 		}
-		for (Section s : this.section) {
+		for(int i = curState+1; i<= this.section.size(); i++){
+			Section s = this.section.get(i);
+			curState = i; //update current state;
 			s.isinloop = this.isinloop;
 			ruleString = s.verifySpace();
 			if (ruleString.indexOf("null") == -1) {
+				this.program = ruleString;
 				return ruleString;
 			}
 		}
+		for (Section s : this.section.subList(curState+1, this.section.size())) {
+			s.isinloop = this.isinloop;
+			ruleString = s.verifySpace();
+			if (ruleString.indexOf("null") == -1) {
+				this.program = ruleString;
+				return ruleString;
+			}
+		}
+		this.program = ruleString;
 		return ruleString;
 	}
 
@@ -365,5 +379,10 @@ public class Segment implements GrammarTreeNode {
 
 	public String getNodeType() {
 		return "segment";
+	}
+
+	@Override
+	public String getProgram() {
+		return this.program;
 	}
 }

@@ -15,6 +15,7 @@ public class Partition implements GrammarTreeNode {
 	public Vector<String> mapping = new Vector<String>();
 	public String label; // the class label of current partition
 	public String cls;
+	public String program = "";
 	public Partition()
 	{	
 	}
@@ -129,34 +130,9 @@ public class Partition implements GrammarTreeNode {
 	}
 
 	public String toProgram() {
-		// //randomly choose a Template
-		// Iterator<String> iterator = this.templates.keySet().iterator();
-		// String[] inds = new String[this.templates.keySet().size()];
-		// double[] prob = new double[inds.length];
-		// int i = 0;
-		// double totalLength = 0;
-		// while(iterator.hasNext())
-		// {
-		// String key = iterator.next();
-		// inds[i] = key;
-		// int size = templates.get(key).get(0).size();
-		// prob[i] = 1.0/(size*1.0);
-		// totalLength += prob[i];
-		// i++;
-		// }
-		// for(int j = 0; j<inds.length; j++)
-		// {
-		//
-		// prob[j] = prob[j]*1.0/totalLength;
-		// }
-		// int clen = UtilTools.multinominalSampler(prob);
-		// String key = inds[clen];
-		// int k = UtilTools.randChoose(templates.get(key).size());
-		// String r = templates.get(key).get(k).toProgram();
-		// //String r =
-		// String.format("(not getClass(\"%s\",value)==\'attr_0\',len(%s))",this.cls,"\"\'"+this.label+"\'\"");
-		// score = templates.get(key).get(k).getScore();
-		return this.trace.toProgram();
+		String res =  this.trace.toProgram();
+		this.program = res;
+		return res;
 
 	}
 
@@ -180,5 +156,10 @@ public class Partition implements GrammarTreeNode {
 
 	public void emptyState() {
 		this.trace.emptyState();
+	}
+
+	@Override
+	public String getProgram() {
+		return this.program;
 	}
 }

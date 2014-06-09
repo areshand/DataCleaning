@@ -14,10 +14,11 @@ public class Traces implements GrammarTreeNode {
 	public Vector<TNode> tarNodes;
 	public HashMap<Integer, Template> traceline = new HashMap<Integer, Template>();
 	public HashMap<Integer, HashMap<String, Template>> loopline = new HashMap<Integer, HashMap<String, Template>>();
-	private int curState = 0;
-	private Vector<Template> totalOrderVector = new Vector<Template>();
+	public int curState = 0;
+	public Vector<Template> totalOrderVector = new Vector<Template>();
 	// keep all the segment expression to prevent repeated construction
 	public static HashMap<String, Segment> AllSegs = new HashMap<String, Segment>();
+	public String program = "null";
 
 	public Traces(Vector<TNode> org, Vector<TNode> tar) {
 		this.orgNodes = org;
@@ -101,11 +102,7 @@ public class Traces implements GrammarTreeNode {
 		}
 		// detect loops
 		// verify loops
-		long vgt_time_limit = System.currentTimeMillis();
 		for (Vector<Segment> vgt : lines) {
-			if ((System.currentTimeMillis() - vgt_time_limit) / 1000 > time_limit) {
-				break; // otherwise takes too much time
-			}
 			Vector<Vector<GrammarTreeNode>> lLine = this.genLoop(vgt);
 			if (lLine != null)
 				lSeg.addAll(lLine);
@@ -905,12 +902,14 @@ public class Traces implements GrammarTreeNode {
 		while (curState < totalOrderVector.size()) {
 			resString = this.totalOrderVector.get(curState).toProgram();
 			if (!resString.contains("null")) {
+				this.program = resString;
 				return resString;
 			} else {
-				this.totalOrderVector.get(curState).emptyState();
+				this.totalOrderVector.get(curState).emptyState();//some segments may work
 				curState++;
 			}
 		}
+		this.program = "null";
 		return "null";
 	}
 
@@ -949,5 +948,10 @@ public class Traces implements GrammarTreeNode {
 	public String getrepString() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getProgram() {
+		return this.program;
 	}
 }
