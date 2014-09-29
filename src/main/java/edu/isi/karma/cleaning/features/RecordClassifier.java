@@ -126,7 +126,6 @@ public class RecordClassifier implements PartitionClassifierType {
 			tmp = tmp.substring(0, tmp.length() - 1);
 			res += tmp + "\n";
 		}
-		System.out.println("" + res);
 	}
 
 	// duplicate data to avoid the situation that one instance per class (svm
@@ -307,8 +306,7 @@ public class RecordClassifier implements PartitionClassifierType {
 			}
 		}
 		// retain on all the data
-		System.out.println(String.format("Gamma: %f, C: %f, Acc: %f", optG,
-				optC, maxAcc));
+		//System.out.println(String.format("Gamma: %f, C: %f, Acc: %f", optG,optC, maxAcc));
 		this.model = internallearnClassifer(optG, optC, trainData, targets);
 		return;
 	}

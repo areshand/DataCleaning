@@ -269,13 +269,16 @@ public class Position implements GrammarTreeNode {
 	public Vector<String> rules = new Vector<String>();
 
 	public String toProgram() {
-		if (curState >= rules.size())
+/*		if (curState >= rules.size())
 			return "null";
 		String rule = rules.get(curState);
 		if (!isinloop)
 			rule = rule.replace("counter", counters.get(1) + "");
 		curState++;
-		return rule;
+		*/
+		
+		String res = this.VerifySpace(curState);
+		return res;
 	}
 
 	public String getRule(int index) {
@@ -426,7 +429,6 @@ public class Position implements GrammarTreeNode {
 			rules.add(line);
 		}
 	}
-
 	public String toString() {
 		return "(" + UtilTools.print(this.leftContextNodes) + ","
 				+ UtilTools.print(this.rightContextNodes) + ")";

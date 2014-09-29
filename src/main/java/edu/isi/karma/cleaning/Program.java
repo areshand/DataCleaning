@@ -1,7 +1,12 @@
 package edu.isi.karma.cleaning;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
+
+import org.perf4j.StopWatch;
+import org.perf4j.log4j.Log4JStopWatch;
 
 public class Program implements GrammarTreeNode {
 	public Vector<Partition> partitions = new Vector<Partition>();
@@ -83,6 +88,67 @@ public class Program implements GrammarTreeNode {
 			}
 		}
 	}
+	public ProgramRule toProgram2(Messager msger){
+		ProgramRule pr = new ProgramRule(this);
+		ProgramAdaptator programAdaptator = new ProgramAdaptator();
+		if (this.partitions.size() > 1) {
+			//StopWatch spw1 = new Log4JStopWatch("Codeblock-genprogram");
+			for (Partition p : this.partitions) {
+				if (p.tarNodes.get(0).size() == 0) {
+					pr.addRule(p.label, "substr(value,0,0)");
+					continue;
+				}
+				//String rule = p.toProgram();
+				String key = p.getHashKey(); 
+				String rule = "null";
+				if(msger.exp2program.containsKey(key))
+				{
+					rule = msger.exp2program.get(key);
+				}
+				else
+				{
+					ArrayList<Partition> xpars = new ArrayList<Partition>();
+					xpars.add(p);
+					ArrayList<String[]> examples = UtilTools.extractExamplesinPartition(xpars);
+					rule = programAdaptator.adapt(msger.exp2Space, msger.exp2program, examples);
+				}
+				if (rule.contains("null"))
+					return null;
+				pr.addRule(p.label, rule);
+				score += p.getScore();
+			}
+			score = score / this.partitions.size();
+			filterUnlabeledData(pr);
+			this.learnClassifier();
+			return pr;
+		} else {
+			if (partitions.size() <= 0) {
+				return null;
+			}
+			if (partitions.get(0).tarNodes.get(0).size() == 0) {
+				pr.addRule(partitions.get(0).label, "substr(value,0,0)");
+				return pr;
+			}
+			String key = partitions.get(0).getHashKey();
+			String s = "null";
+			if(msger.exp2program.containsKey(key))
+			{
+				s = msger.exp2program.get(key);
+			}
+			else
+			{
+				ArrayList<Partition> xpars = new ArrayList<Partition>();
+				xpars.add(partitions.get(0));
+				ArrayList<String[]> examples = UtilTools.extractExamplesinPartition(xpars);
+				s = programAdaptator.adapt(msger.exp2Space, msger.exp2program, examples);
+			}
+			if (s.contains("null"))
+				return null;
+			score = this.partitions.get(0).getScore();
+			pr.addRule(partitions.get(0).label, s);
+			return pr;
+		}
+	}
 	public ProgramRule toProgram1() {
 		ProgramRule pr = new ProgramRule(this);
 		if (this.partitions.size() > 1) {
@@ -91,7 +157,10 @@ public class Program implements GrammarTreeNode {
 					pr.addRule(p.label, "substr(value,0,0)");
 					continue;
 				}
+				StopWatch stopWatch = new Log4JStopWatch("toProgram1");
 				String rule = p.toProgram();
+				stopWatch.stop();
+
 				if (rule.contains("null"))
 					return null;
 				pr.addRule(p.label, rule);

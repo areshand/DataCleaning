@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.STPageOrder;
+import org.perf4j.LoggingStopWatch;
+import org.perf4j.StopWatch;
+import org.perf4j.log4j.Log4JStopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -271,30 +275,88 @@ public class ProgSynthesis {
 		}
 		return rules;
 	}
-
-	public Collection<ProgramRule> run_main() {
+	public Collection<ProgramRule> adaptive_main()
+	{
+		StopWatch stopWatch0 = new Log4JStopWatch("adaptive_main");
 		long t1 = System.currentTimeMillis();
-		Vector<Partition> vp = this.ProducePartitions(true);
-		Collection<ProgramRule> cpr = this.producePrograms(vp);
-		Prober.trackProgram(vp, cpr.iterator().next());
+		StopWatch stopWatch = new Log4JStopWatch("adaptive_producePartition");
+		Vector<Partition> par = this.adaptive_producePartition();
+		stopWatch.stop();
+		StopWatch stopWatch1 = new Log4JStopWatch("adaptive_produceProgram");
+		Collection<ProgramRule> cpr = this.adaptive_produceProgram(par);
+		stopWatch1.stop();
 		Traces.AllSegs.clear();
+		//record the learning time
+		this.learnspan = System.currentTimeMillis()-t1;
+		stopWatch0.stop();
 		return cpr;
 	}
-	public Collection<ProgramRule> run_adaptation(ProgramRule rule, String[] newExample)
+	public Collection<ProgramRule> adaptive_produceProgram(Vector<Partition> pars)
 	{
-		ArrayList<ProgramRule> rules = new ArrayList<ProgramRule>();
-		//Extract traces set
-		Traces t = msGer.expTraces.createTrace(newExample);
-		// convert the programRule into a grammar Tree
-		String prog = rule.getStringRule(rule.getClassForValue(newExample[0]));
-		ProgramParser parser = new ProgramParser();
-		ParseTreeNode root = parser.parse(prog);
-		//identify the incorrect subprogram and corresponding tracNodes of all examples
 		
-		//relearn the subprogram
-		
-		//update the programRule
-		
+		Program prog = new Program(pars, this.classifier,this.dataPreProcessor);
+		this.myprog = prog;
+		HashSet<ProgramRule> rules = new HashSet<ProgramRule>();
+		int prog_cnt = 1;
+		int i = 0;
+		while (i < prog_cnt) {
+			ProgramRule r = prog.toProgram2(msGer);
+			if (r == null)
+				return null;
+			String xString = "";
+			int termCnt = 0;
+			boolean findRule = true;
+			while ((xString = this.validRule(r, pars)) != "GOOD" && findRule) {
+				if (xString.compareTo("NO_CLASIF") == 0) {
+					return null; // indistinguishable classes.
+				}
+				for (Partition p : prog.partitions) {
+					if (p.label.compareTo(xString) == 0) {
+						String newRule = p.toProgram();
+						if (ConfigParameters.debug == 1)
+							System.out.println("updated Rule: " + p.label
+									+ ": " + newRule);
+						if (newRule.contains("null")) {
+							findRule = false;
+							break;
+						}
+						r.updateClassworker(xString, newRule);
+					}
+				}
+				termCnt++;
+			}
+			if (findRule)
+			{
+				rules.add(r);
+			}
+			i++;
+		}
+		return rules;
+	}
+	public Vector<Partition> adaptive_producePartition()
+	{	
+		Vector<Partition> pars = this.initePartitions();
+		partiCluster = new ExampleCluster(this, pars, string2Vector);
+		partiCluster.updateConstraints(msGer.getConstraints());
+		partiCluster.updateWeights(msGer.weights);
+		//update the program space and hypothesis space
+		pars = partiCluster.adaptive_cluster_weightEuclidean(pars);
+		this.ruleNo = pars.size();
+		return pars;
+	}
+	public Collection<ProgramRule> run_main() {
+		long t1 = System.currentTimeMillis();
+		StopWatch stopWatch0 = new Log4JStopWatch("main");
+		StopWatch stopWatch = new Log4JStopWatch("producePartition");
+		Vector<Partition> vp = this.ProducePartitions(true);
+		stopWatch.stop();
+		StopWatch stopWatch1 = new Log4JStopWatch("producePrograms");
+		Collection<ProgramRule> cpr = this.producePrograms(vp);
+		stopWatch1.stop();
+		Traces.AllSegs.clear();
+		stopWatch0.stop();
+		this.learnspan = System.currentTimeMillis()-t1;
+		return cpr;
 	}
 
 	public String validRule(ProgramRule p, Vector<Partition> vp) {

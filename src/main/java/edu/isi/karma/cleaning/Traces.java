@@ -12,6 +12,7 @@ public class Traces implements GrammarTreeNode {
 	public static final int time_limit = 20;
 	public Vector<TNode> orgNodes;
 	public Vector<TNode> tarNodes;
+	public Vector<Vector<GrammarTreeNode>> rawlines; // used for program adaptation
 	public HashMap<Integer, Template> traceline = new HashMap<Integer, Template>();
 	public HashMap<Integer, HashMap<String, Template>> loopline = new HashMap<Integer, HashMap<String, Template>>();
 	public int curState = 0;
@@ -19,7 +20,10 @@ public class Traces implements GrammarTreeNode {
 	// keep all the segment expression to prevent repeated construction
 	public static HashMap<String, Segment> AllSegs = new HashMap<String, Segment>();
 	public String program = "null";
-
+	public Traces()
+	{
+		
+	}
 	public Traces(Vector<TNode> org, Vector<TNode> tar) {
 		this.orgNodes = org;
 		this.tarNodes = tar;
@@ -108,8 +112,9 @@ public class Traces implements GrammarTreeNode {
 				lSeg.addAll(lLine);
 		}
 		// consolidate
+		this.rawlines = vSeg;
 		this.traceline = consolidateDiffSize(vSeg);
-		this.loopline = consolidateDiffLoop(lSeg);
+		//this.loopline = consolidateDiffLoop(lSeg);
 	}
 
 	// find all segments starting from pos
@@ -525,7 +530,20 @@ public class Traces implements GrammarTreeNode {
 		}
 		return true;
 	}
-
+	public Vector<GrammarTreeNode> consolidate_tool(Vector<Vector<GrammarTreeNode>> lists)
+	{
+		Vector<GrammarTreeNode> res = lists.get(0);
+		Vector<GrammarTreeNode> result = new Vector<GrammarTreeNode>();
+		for (int i = 1; i < lists.size(); i++) {
+			result = new Vector<GrammarTreeNode>();
+			for (int j = 0; j < res.size(); j++) {
+				GrammarTreeNode t = this.union(res.get(j), lists.get(i).get(j));
+				result.add(t);
+			}
+			res = result;
+		}
+		return res;
+	}
 	public Template consolidate(Vector<Template> paths) {
 		Vector<GrammarTreeNode> res = paths.get(0).body;
 		Vector<GrammarTreeNode> result = new Vector<GrammarTreeNode>();

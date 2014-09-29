@@ -19,7 +19,13 @@ public class Partition implements GrammarTreeNode {
 	public Partition()
 	{	
 	}
-
+	public Partition(Traces t,Vector<Vector<TNode>> orgNodes, Vector<Vector<TNode>> tarNodes)
+	{
+		this.trace = t;
+		this.orgNodes = orgNodes;
+		this.tarNodes = tarNodes;
+		
+	}
 	public long size() {
 		return trace.size();
 	}
@@ -90,20 +96,17 @@ public class Partition implements GrammarTreeNode {
 	public static String getStringKey(ArrayList<Partition> pars)
 	{
 		String s = "";
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<String[]> lines = new ArrayList<String[]>();
 		for(Partition p: pars)
 		{
 			for (int i = 0; i < p.orgNodes.size(); i++) {
 				String s1 = UtilTools.print(p.orgNodes.get(i));
 				String s2 = UtilTools.print(p.tarNodes.get(i));
-				String line = String.format("%s, %s\n",s1, s2);
+				String[] line = {s1,s2};
 				lines.add(line);
 			}
 		}
-		Collections.sort(lines);
-		for (String l : lines) {
-			s += l;
-		}
+		s = UtilTools.createkey(lines);
 		return s.trim();
 	}
 

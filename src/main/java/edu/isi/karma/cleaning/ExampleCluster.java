@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import org.apache.commons.math.optimization.linear.LinearConstraint;
 import org.apache.commons.math.optimization.linear.LinearObjectiveFunction;
+import org.python.antlr.PythonParser.return_stmt_return;
 
 import edu.isi.karma.cleaning.features.Feature;
 
@@ -32,7 +33,7 @@ public class ExampleCluster {
 		CP, CPIC, SP, SPIC, DP, DPIC
 	};
 
-	public static  method option = method.DPIC;
+	public static method option = method.DPIC;
 
 	/*
 	 * example are (id, (input, output)) constrain: true->must link constraints,
@@ -89,12 +90,8 @@ public class ExampleCluster {
 					String line = String.format("%s, %s\n", p[0], p[1]);
 					g.add(line);
 				}
-				Collections.sort(g);
 				String res = "";
-				for (String l : g) {
-					res += l;
-				}
-				res = res.trim();
+				res = UtilTools.createkey(new ArrayList(group));
 				legalParitions.put(res, false);
 			}
 		}
@@ -124,6 +121,107 @@ public class ExampleCluster {
 	public void diagnose() {
 		System.out.println("" + this.pSynthesis.featureSet.getFeatureNames());
 		System.out.println("" + Arrays.toString(weights));
+	}
+
+	// adaptive partition program learning
+	public Vector<Partition> adaptive_cluster_weightEuclidean(
+			Vector<Partition> pars) {
+		// single example
+		if (pars.size() == 1) {
+			ProgramAdaptator pAdapter = new ProgramAdaptator();
+			ArrayList<String[]> exps = UtilTools
+					.extractExamplesinPartition(pars);
+			String prog = pAdapter.adapt(pSynthesis.msGer.exp2Space,
+					pSynthesis.msGer.exp2program, exps);
+			return pars;
+		}
+		while (true) {
+			// find partitions with the smallest distance
+			double mindist = Double.MAX_VALUE;
+			int x_ind = -1;
+			int y_ind = -1;
+			/* print the partitioning information* */
+			// ProgTracker.printPartition(pars);
+			// ProgTracker.printConstraints(constraints);
+			/***/
+			for (int i = 0; i < pars.size(); i++) {
+				for (int j = i + 1; j < pars.size(); j++) {
+					String key = getStringKey(pars.get(i), pars.get(j));
+					boolean good = true;
+					for (String k : legalParitions.keySet()) {
+						if (!legalParitions.get(k) && key.indexOf(k) != -1) {
+							good = false;
+							break;
+						}
+					}
+					if (!good) {
+						legalParitions.put(key, false);
+						continue;
+					}
+					// double par_dist = getDistance(pars.get(i), pars.get(j));
+					// double par_dist = getCompScore(pars.get(i), pars.get(j),
+					// pars);// sumit heuristic
+					double par_dist = getDistance(pars.get(i), pars.get(j),
+							pars);
+					if (par_dist < mindist) {
+						mindist = par_dist;
+						x_ind = i;
+						y_ind = j;
+					}
+				}
+			}
+			if (x_ind == -1 || y_ind == -1) {
+				break;
+			}
+			/* print the partitioning information* */
+			// ProgTracker.printPartitions(pars.get(x_ind), pars.get(y_ind));
+			/***/
+			Partition z = pars.get(x_ind).mergewith(pars.get(y_ind));
+
+			if (adaptive_isLegalPartition(z)) {
+				legalParitions.put(z.getHashKey(), true);
+				// update the partition vector
+				pars = UpdatePartitions(x_ind, y_ind, pars);
+				continue;
+			} else {
+				legalParitions.put(
+						getStringKey(pars.get(x_ind), pars.get(y_ind)), false);
+				// update the constraints
+				Vector<String[]> clique = new Vector<String[]>();
+				for (int k = 0; k < pars.get(x_ind).orgNodes.size(); k++) {
+					String org = UtilTools.print(pars.get(x_ind).orgNodes
+							.get(k));
+					String tar = UtilTools.print(pars.get(x_ind).tarNodes
+							.get(k));
+					String[] pair = { org, tar };
+					clique.add(pair);
+				}
+				for (int k = 0; k < pars.get(y_ind).orgNodes.size(); k++) {
+					String org = UtilTools.print(pars.get(y_ind).orgNodes
+							.get(k));
+					String tar = UtilTools.print(pars.get(y_ind).tarNodes
+							.get(k));
+					String[] pair = { org, tar };
+					clique.add(pair);
+				}
+				constraints.add(clique);
+				// update the distance metrics
+				updateDistanceMetric(pars);
+			}
+		}
+		if (pars.size() > 1)
+			updateDistanceMetric(pars); // tune the final weight given the
+										// current
+		// clusters
+		// assign ulabled data to each partition
+		for (Partition p : pars) {
+			p.orgUnlabeledData.clear();
+		}
+		if (pars.size() >= 2) {
+			assignUnlabeledData(pars);
+		}
+		//this.diagnose();
+		return pars;
 	}
 
 	// use distorted distance function to cluster partitions
@@ -212,8 +310,7 @@ public class ExampleCluster {
 		for (Partition p : pars) {
 			p.orgUnlabeledData.clear();
 		}
-		if(pars.size() >= 2)
-		{
+		if (pars.size() >= 2) {
 			assignUnlabeledData(pars);
 		}
 		this.diagnose();
@@ -224,7 +321,7 @@ public class ExampleCluster {
 		HashMap<String, Double> dists = new HashMap<String, Double>();
 		// find the distance between partitions
 		for (int i = 0; i < pars.size(); i++) {
-			for (int j = i+1; j < pars.size(); j++) {
+			for (int j = i + 1; j < pars.size(); j++) {
 				String d = getStringKey(pars.get(i), pars.get(j));
 				if (!dists.containsKey(d)) {
 					dists.put(d, getDistance(pars.get(i), pars.get(j)));
@@ -242,14 +339,15 @@ public class ExampleCluster {
 			for (Partition p : pars) {
 				double dist = getDistance(val, p);
 				// /
-				///System.out.println(String.format("%s, %s: %f", val, p.label,	dist));
+				// /System.out.println(String.format("%s, %s: %f", val, p.label,
+				// dist));
 				// /
 				if (dist < min_val) {
 					min_val_2nd = min_val;
 					p_index_2nd = p_index;
 					min_val = dist;
 					p_index = p;
-					
+
 				} else if (dist >= min_val && dist < min_val_2nd) {
 					min_val_2nd = dist;
 					p_index_2nd = p;
@@ -276,8 +374,8 @@ public class ExampleCluster {
 		for (Partition key : testResult.keySet()) {
 			Map dicttmp = UtilTools.sortByComparator(testResult.get(key));
 			/** print unlabeled data **/
-			//System.out.println("Partition: " + key.label);
-			//ProgTracker.printUnlabeledData(dicttmp);
+			// System.out.println("Partition: " + key.label);
+			// ProgTracker.printUnlabeledData(dicttmp);
 			/****/
 			int cnt = 0;
 			for (Object xkey : dicttmp.keySet()) {
@@ -429,11 +527,11 @@ public class ExampleCluster {
 		return res;
 	}
 
-	/*public double getDistance(Partition a, Partition b) {
-		double[] x = getPartitionVector(a);
-		double[] y = getPartitionVector(b);
-		return getDistance(x, y);
-	}*/
+	/*
+	 * public double getDistance(Partition a, Partition b) { double[] x =
+	 * getPartitionVector(a); double[] y = getPartitionVector(b); return
+	 * getDistance(x, y); }
+	 */
 
 	public double getDistance(Partition a, Partition b) {
 		double mindist = Double.MAX_VALUE;
@@ -493,6 +591,54 @@ public class ExampleCluster {
 		}
 
 		return Math.sqrt(sum);
+	}
+	//check b can be copied from a
+	public boolean iscovered(String a, String b)
+	{
+		String[] elems = b.split("\\*");
+		boolean covered = true;
+		for(String e: elems)
+		{
+			if(a.indexOf(e)== -1)
+			{
+				covered = false;
+				break;
+			}
+		}
+		return covered;
+	}
+	public boolean adaptive_isLegalPartition(Partition p) {
+		if (p == null) {
+			failedCnt++;
+			return false;
+		}
+		
+		String key = p.getHashKey();
+		if (legalParitions.containsKey(key)) {
+			return legalParitions.get(key);
+		}
+		// test whether its subset fails
+		for (String k : legalParitions.keySet()) {
+			if (!legalParitions.get(k)) // false
+			{
+				if (iscovered(key, k)) {
+					return false;
+				}
+			}
+		}
+		ProgramAdaptator pAdapter = new ProgramAdaptator();
+		ArrayList<Partition> nPs = new ArrayList<Partition>();
+		nPs.add(p);
+		ArrayList<String[]> examps = UtilTools.extractExamplesinPartition(nPs);
+		String fprogram = pAdapter.adapt(pSynthesis.msGer.exp2Space,pSynthesis.msGer.exp2program, examps);
+		if (fprogram.indexOf("null")!= -1) {
+			failedCnt++;
+			legalParitions.put(key, false);
+			return false;
+		} else {
+			legalParitions.put(key, true);
+			return true;
+		}
 	}
 
 	public boolean isLegalPartition(Partition p) {

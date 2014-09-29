@@ -204,6 +204,7 @@ public class Template implements GrammarTreeNode {
 
 	@Override
 	public void emptyState() {
+		curState = 0;
 		for (GrammarTreeNode treeNode : body) {
 			treeNode.emptyState();
 		}

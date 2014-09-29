@@ -1,5 +1,6 @@
 package edu.isi.karma.cleaning;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -361,5 +362,54 @@ public class UtilTools {
 		Vector<String> res = new Vector<String>();
 		res.addAll(mapHashSet.keySet());
 		return res;
+	}
+	public static String formatExp(String[] e)
+	{
+		String res =String.format("%s|%s", e[0],e[1]);
+		return res;
+	}
+	//test whether a covers b
+	public static boolean iscovered(String a, String b)
+	{
+		String[] elems = b.split("\\*");
+		boolean covered = true;
+		for(String e: elems)
+		{
+			if(a.indexOf(e)== -1)
+			{
+				covered = false;
+				break;
+			}
+		}
+		return covered;
+	}
+	public static String createkey(ArrayList<String[]> examples)
+	{
+		ArrayList<String> tmp = new ArrayList<String>();
+		for(String[] ele: examples)
+		{
+			String t = UtilTools.formatExp(ele);
+			tmp.add(t);
+		}
+		Collections.sort(tmp);
+		String key = "";
+		for(String e: tmp)
+		{
+			key += e+"*";
+		}
+		return key;
+	}
+	public static ArrayList<String[]> extractExamplesinPartition(Collection<Partition> pars)
+	{
+		ArrayList<String[]> examples = new ArrayList<String[]>();
+		for(Partition par: pars)
+		{
+			for(int i = 0; i < par.orgNodes.size(); i++)
+			{
+				String[] exp = {UtilTools.print(par.orgNodes.get(i)), UtilTools.print(par.tarNodes.get(i))};
+				examples.add(exp);
+			}
+		}
+		return examples;
 	}
 }

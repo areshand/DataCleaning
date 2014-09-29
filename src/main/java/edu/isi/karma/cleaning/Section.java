@@ -28,7 +28,20 @@ public class Section implements GrammarTreeNode {
 		this.reiniteRules();
 		this.isinloop = isinloop;
 	}
-
+	public boolean isValid(String rule)
+	{
+		boolean res = true;
+		ProgramRule convRule = new ProgramRule(rule);
+		for(int i = 0; i < orgStrings.size(); i++)
+		{
+			if(!(convRule.transform(orgStrings.get(i)).compareTo(tarStrings.get(i))==0))
+			{
+				res = false;
+				return res;
+			}
+		}
+		return res;
+	}
 	public String verifySpace() {
 		String rule = "";
 		this.pair[0].isinloop = this.isinloop;
@@ -39,8 +52,15 @@ public class Section implements GrammarTreeNode {
 			curState++;
 			if (rule1.indexOf("null") == -1 && rule2.indexOf("null") == -1) {
 				rule = String.format("substr(value,%s,%s)", rule1, rule2);
-				this.program = rule;
-				return rule;
+				if(rule.contains("substr(value,indexOf(value,'BNK','NUM',1*1),indexOf(value,'NUM','BNK',2*1))"))
+				{
+					System.out.println("Here");
+				}
+				if(isValid(rule))
+				{
+					this.program = rule;
+					return rule;
+				}
 			}
 			if (rule1.indexOf("null") != -1 && rule2.indexOf("null") != -1) {
 				break;

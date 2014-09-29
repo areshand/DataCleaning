@@ -1,12 +1,15 @@
 package edu.isi.karma.cleaning;
 
+import java.util.HashMap;
 import java.util.Vector;
 //used to carry information accross iterations
 
 public class Messager {
 	double[] weights = null;
 	Vector<Vector<String[]>> cm_constr = new Vector<Vector<String[]>>();
-	ExampleTraces expTraces = new ExampleTraces();
+	HashMap<String, Traces> exp2Space = new HashMap<String, Traces>();
+	HashMap<String, String> exp2program = new HashMap<String,String>();
+	//ExampleTraces expTraces = new ExampleTraces();
 	public Messager()
 	{
 		
