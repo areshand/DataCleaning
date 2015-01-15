@@ -65,14 +65,8 @@ public class Traces implements GrammarTreeNode {
 			vs.add(c);
 			tlines.add(vs);
 		}
-		long stime = System.currentTimeMillis();
 		// find all possible segments starting from a position
 		while (tlines.size() > 0) {
-			if ((System.currentTimeMillis() - stime) / 1000 > time_limit) {
-				// System.out.println("Exceed the time limit");
-				lines.clear();
-				break; // otherwise takes too much time
-			}
 			Vector<Vector<Segment>> nlines = new Vector<Vector<Segment>>();
 			Vector<Segment> segs = tlines.remove(0);
 			int curPos = segs.get(segs.size() - 1).end;
@@ -81,22 +75,27 @@ public class Traces implements GrammarTreeNode {
 				lines.add(segs);
 				break;
 			}
+			//use previous created next segments 
 			if (pos2Segs.containsKey(curPos))
 				children = pos2Segs.get(curPos);
 			else {
 				children = findSegs(curPos);
 			}
+			//reach the end and find one trace.[is this a valid sequence?]
 			if (children == null || children.size() == 0) {
 				lines.add(segs);
-			}
+			} 
+			//create a new sequence for each new children node. add them into nlines
 			for (Segment s : children) {
 				Vector<Segment> tmp = new Vector<Segment>();
 				tmp.addAll(segs);
 				tmp.add(s);
 				nlines.add(tmp);
 			}
+			//update the sequence that requiring expanding.
 			tlines.addAll(nlines);
 		}
+		
 		Vector<Vector<GrammarTreeNode>> vSeg = new Vector<Vector<GrammarTreeNode>>();
 		Vector<Vector<GrammarTreeNode>> lSeg = new Vector<Vector<GrammarTreeNode>>();
 		for (Vector<Segment> vs : lines) {
@@ -104,8 +103,8 @@ public class Traces implements GrammarTreeNode {
 					.convertSegVector(vs);
 			vSeg.add(vsGrammarTreeNodes);
 		}
-		// detect loops
-		// verify loops
+		// detect loops & verify loops from segment sequences 
+		// add all the generated loop sequences into the lSeg
 		for (Vector<Segment> vgt : lines) {
 			Vector<Vector<GrammarTreeNode>> lLine = this.genLoop(vgt);
 			if (lLine != null)

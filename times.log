@@ -983,3 +983,12 @@ producePartition                                       233.8           0        
 producePrograms                                        934.9          13        1951       564.1          14
 toProgram1                                              90.5           0         358        85.2          26
 
+Performance Statistics   2014-10-17 17:10:00 - 2014-10-17 17:26:40
+Tag                                                  Avg(ms)         Min         Max     Std Dev       Count
+adaptive_main                                            8.0           8           8         0.0           1
+adaptive_producePartition                                4.0           4           4         0.0           1
+adaptive_produceProgram                                  3.0           3           3         0.0           1
+main                                                  5330.0        5330        5330         0.0           1
+producePartition                                         6.0           6           6         0.0           1
+producePrograms                                       5322.0        5322        5322         0.0           1
+
