@@ -440,4 +440,9 @@ public class UtilTools {
 			}
 		}
 	}
+	public static Vector<TNode> convertStringtoTNodes(String s1){
+		Ruler r = new Ruler();
+		r.setNewInput(s1);;
+		return r.vec;
+	}
 }
