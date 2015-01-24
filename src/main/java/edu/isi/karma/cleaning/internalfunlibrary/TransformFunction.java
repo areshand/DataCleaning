@@ -7,5 +7,5 @@ import edu.isi.karma.cleaning.TNode;
 public interface TransformFunction {
 	public boolean convertable(Vector<TNode> sour, Vector<TNode> dest);
 	public String convert(Vector<TNode> sour);
-	public String getId();
+	public int getId();
 }

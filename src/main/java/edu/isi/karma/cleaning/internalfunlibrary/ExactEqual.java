@@ -22,9 +22,9 @@ public class ExactEqual implements TransformFunction {
 	}
 
 	@Override
-	public String getId() {
+	public int getId() {
 		// TODO Auto-generated method stub
-		return "Exact";
+		return InternalTransformationLibrary.Functions.Exact.getValue();
 	}
 
 }

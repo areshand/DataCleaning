@@ -3,11 +3,24 @@ package edu.isi.karma.cleaning.internalfunlibrary;
 import java.util.Collection;
 import java.util.HashMap;
 
-
 public class InternalTransformationLibrary {
-	HashMap<String, TransformFunction> funcs = new HashMap<String, TransformFunction>();
-	public InternalTransformationLibrary(){
-		//add all the functions
+	public static enum Functions {
+		NonExist(-1), Cap(1), Exact(2), Uppercase(3), Lowercase(4), Firstletter(5);
+		private final int id;
+
+		Functions(int id) {
+			this.id = id;
+		}
+
+		public int getValue() {
+			return this.id;
+		}
+	}
+
+	HashMap<Integer, TransformFunction> funcs = new HashMap<Integer, TransformFunction>();
+
+	public InternalTransformationLibrary() {
+		// add all the functions
 		ExactEqual equal = new ExactEqual();
 		funcs.put(equal.getId(), equal);
 		CaptializeAll cap = new CaptializeAll();
@@ -19,24 +32,21 @@ public class InternalTransformationLibrary {
 		UpperCaseAll uca = new UpperCaseAll();
 		funcs.put(uca.getId(), uca);
 	}
-	public Collection<String> getAllIDs()
-	{
+
+	public Collection<Integer> getAllIDs() {
 		return funcs.keySet();
 	}
-	public Collection<TransformFunction> getAllFuncs()
-	{
+
+	public Collection<TransformFunction> getAllFuncs() {
 		return funcs.values();
 	}
-	public TransformFunction getFunc(String Id)
-	{
-		if(funcs.containsKey(Id))
-		{
+
+	public TransformFunction getFunc(Integer Id) {
+		if (funcs.containsKey(Id)) {
 			return funcs.get(Id);
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
-	
+
 }

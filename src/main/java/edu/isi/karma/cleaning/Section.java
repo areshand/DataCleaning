@@ -2,11 +2,11 @@ package edu.isi.karma.cleaning;
 
 import java.util.Vector;
 
-import edu.isi.karma.cleaning.internalfunlibrary.TransformFunction;
+import edu.isi.karma.cleaning.internalfunlibrary.InternalTransformationLibrary;
 
 public class Section implements GrammarTreeNode {
 	public Position[] pair;
-	public TransformFunction convert = null;
+	public int convert = InternalTransformationLibrary.Functions.NonExist.getValue();
 	public static int time_limit = 10;
 	public Vector<int[]> rules = new Vector<int[]>();
 	public int rule_cxt_size = Segment.cxtsize_limit;
@@ -201,6 +201,10 @@ public class Section implements GrammarTreeNode {
 		}
 		if (pair[1] != null) {
 			rp = pair[1].toString();
+		}
+		if(convert != -1)
+		{
+			return lp+", "+rp+(this.convert);
 		}
 		return lp + rp;
 	}

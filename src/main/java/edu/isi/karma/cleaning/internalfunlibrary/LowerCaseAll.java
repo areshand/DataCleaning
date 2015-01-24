@@ -9,8 +9,10 @@ public class LowerCaseAll implements TransformFunction {
 
 	@Override
 	public boolean convertable(Vector<TNode> sour, Vector<TNode> dest) {
-		String ss = this.convert(sour);
 		String ts = UtilTools.print(dest);
+		if(UtilTools.print(sour).compareTo(ts) == 0)
+			return false;
+		String ss = this.convert(sour);
 		if(ss.compareTo(ts) == 0)
 		{
 			return true;
@@ -26,14 +28,18 @@ public class LowerCaseAll implements TransformFunction {
 		for(TNode t: sour){
 			ret += t.text.toLowerCase();
 		}
+		if(ret.compareTo(UtilTools.print(sour)) == 0)
+		{
+			return null;
+		}
 		return ret;
 	
 	}
 
 	@Override
-	public String getId() {
+	public int getId() {
 		// TODO Auto-generated method stub
-		return "Lowercase";
+		return InternalTransformationLibrary.Functions.Lowercase.getValue();
 	}
 
 }

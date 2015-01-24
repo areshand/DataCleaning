@@ -165,6 +165,8 @@ public class Segment implements GrammarTreeNode {
 
 				Section xsec = new Section(pair, orgStrings, tarStrings,
 						isinloop);
+				if(elem.length> 2)
+					xsec.convert = elem[2];
 				section.add(xsec);
 			}
 		}
@@ -252,7 +254,7 @@ public class Segment implements GrammarTreeNode {
 				s += "loop";
 			}
 			for (Section x : this.section) {
-				s += x.pair[0] + "," + x.pair[1];
+				s += x.toString();
 			}
 			s += ">";
 			return s;

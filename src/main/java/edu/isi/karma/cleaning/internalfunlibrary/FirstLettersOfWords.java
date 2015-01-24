@@ -9,8 +9,11 @@ public class FirstLettersOfWords implements TransformFunction {
 
 	@Override
 	public boolean convertable(Vector<TNode> sour, Vector<TNode> dest) {
-		String ss = this.convert(sour);
 		String ts = UtilTools.print(dest);
+		if(UtilTools.print(sour).compareTo(ts) == 0){
+			return false;
+		}
+		String ss = this.convert(sour);
 		if(ss.compareTo(ts) == 0)
 		{
 			return true;
@@ -28,16 +31,20 @@ public class FirstLettersOfWords implements TransformFunction {
 			for (TNode t : sour) {
 				ret += t.text.substring(0, 1);
 			}
+			if(ret.compareTo(UtilTools.print(sour)) == 0)
+			{
+				return null;
+			}
 			return ret;
 		} catch (Exception ex) {
-			return "";
+			return null;
 		}
 	}
 
 	@Override
-	public String getId() {
+	public int getId() {
 		// TODO Auto-generated method stub
-		return "Firstletter";
+		return InternalTransformationLibrary.Functions.Firstletter.getValue();
 	}
 
 }

@@ -4,13 +4,16 @@ import java.util.Vector;
 
 import edu.isi.karma.cleaning.TNode;
 import edu.isi.karma.cleaning.UtilTools;
+import edu.isi.karma.cleaning.internalfunlibrary.InternalTransformationLibrary.Functions;
 
 public class CaptializeAll implements TransformFunction {
 
 	@Override
 	public boolean convertable(Vector<TNode> sour, Vector<TNode> dest) {
-		// TODO Auto-generated method stub
 		String target = UtilTools.print(dest);
+		// if exact match succeed, return false;
+		if(UtilTools.print(sour).compareTo(target) == 0)
+			return false;
 		String tran = this.convert(sour);
 		if(target.compareTo(tran) == 0)
 		{
@@ -30,15 +33,19 @@ public class CaptializeAll implements TransformFunction {
 				ret += Character.toUpperCase(t.text.charAt(0))
 						+ t.text.substring(1);
 			}
+			if(ret.compareTo(UtilTools.print(sour)) == 0)
+			{
+				return null;
+			}
 			return ret;
 		} catch (Exception e) {
-			return "";
+			return null;
 		}
 	}
 
 	@Override
-	public String getId() {
-		return "Cap";
+	public int getId() {
+		return InternalTransformationLibrary.Functions.Cap.getValue();
 	}
 
 }
