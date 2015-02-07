@@ -37,7 +37,19 @@ public class SegmentMapper {
 		HashMap<String, ArrayList<Dataitem>> groups = new HashMap<String,ArrayList<Dataitem>>();
 		Vector<Segment> ret = new Vector<Segment>();
 		for(ArrayList<Dataitem> line: repo){
+			if(line.size() == 0)
+				continue;
 			Dataitem item = convert(line, org, tar);
+			if(item.range[0] < 0){
+				//create constant segment and return
+				Vector<TNode> cont = new Vector<TNode>();
+				for(int ptr = item.tarpos; ptr<= item.tarend; ptr++){
+					cont.add(tar.get(ptr));
+				}
+				Segment seg = new Segment(item.tarpos, item.tarend+1, cont);
+				ret.add(seg);
+				return ret;
+			}
 			String key = item.tarpos + ", "+ item.tarend;
 			if(groups.containsKey(key))
 			{
@@ -61,7 +73,7 @@ public class SegmentMapper {
 			}
 			int start = groups.get(key).get(0).tarpos;
 			int end = groups.get(key).get(0).tarend;
-			Segment seg = new Segment(start, end, kmappings, org, tar);
+			Segment seg = new Segment(start, end+1, kmappings, org, tar);
 			ret.add(seg);			
 		}
 		return ret;
@@ -102,6 +114,9 @@ public class SegmentMapper {
 			repo.add(path);
 		}
 		Vector<Dataitem> updated = makeOneMove(org, tar, root);
+		if(updated.size() == 0){
+			repo.add(path);
+		}
 		
 		for (Dataitem elem : updated) {
 			ArrayList<Dataitem> newlist = new ArrayList<Dataitem>();
@@ -125,6 +140,8 @@ public class SegmentMapper {
 		}
 		TNode t = tar.get(tpos);
 		String tstr = t.text;
+		boolean nomapping = true;
+		boolean followChecking = false;
 		for (int i = 0; i < org.size(); i++) {
 			String prefix = "";
 			if (root.funcid == InternalTransformationLibrary.Functions.NonExist.getValue()) {
@@ -136,10 +153,12 @@ public class SegmentMapper {
 						nd.range[1] = pos - 1;
 						nd.funcid = tf.getId();
 						nd.tarpos = root.tarpos;
+						nomapping = false;
 						ret.add(nd);
 					}
-				}
+				}				
 			} else {
+				followChecking = true;
 				int pos = checkOneFunction(itfl.getFunc(root.funcid), prefix,
 						org, i, tstr);
 				if (pos != -1) {
@@ -148,9 +167,20 @@ public class SegmentMapper {
 					nd.range[1] = pos - 1;
 					nd.funcid = root.funcid;
 					nd.tarpos = root.tarpos;
+					nomapping = false;
 					ret.add(nd);
 				}
 			}
+		}
+		if(nomapping && !followChecking)
+		{
+			//insert constant
+			Dataitem nd = new Dataitem();
+			nd.range[0] = -1;
+			nd.range[1] = -1;
+			nd.funcid = -2;
+			nd.tarpos = root.tarpos;
+			ret.add(nd);
 		}
 		return ret;
 	}
@@ -158,6 +188,8 @@ public class SegmentMapper {
 	// return the ending pos if successful else return -1
 	public static int checkOneFunction(TransformFunction tf, String prefix,
 			Vector<TNode> org, int i, String tar) {
+		if(tf == null)
+			return -1;
 		if (i >= org.size()) {
 			if (prefix.compareTo(tar) == 0) {
 				return i;
@@ -170,7 +202,7 @@ public class SegmentMapper {
 		Vector<TNode> tNodes = new Vector<TNode>();
 		tNodes.add(org.get(i));
 		String con = tf.convert(tNodes);
-		if(con == null)
+		if(con == null || con.isEmpty())
 			return -1;
 		String tmp = prefix + tf.convert(tNodes);
 		if (tar.indexOf(tmp) != 0) {
@@ -183,8 +215,8 @@ public class SegmentMapper {
 
 	@Test
 	public void selfTest() {
-		String[] s1 = {"Hello World", "t", "International"};
-		String[] s2 = {"Hello World", "T", "I"};
+		String[] s1 = {"<_START>MELVIN Julian<_END>"};
+		String[] s2 = {"Julian"};
 		for (int i = 0; i < s1.length; i++) {
 			Vector<TNode> ts1 = UtilTools.convertStringtoTNodes(s1[i]);
 			Vector<TNode> ts2 = UtilTools.convertStringtoTNodes(s2[i]);

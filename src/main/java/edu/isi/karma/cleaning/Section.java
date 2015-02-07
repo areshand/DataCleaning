@@ -54,11 +54,8 @@ public class Section implements GrammarTreeNode {
 			String rule2 = this.pair[1].VerifySpace(rules.get(curState)[1]);
 			curState++;
 			if (rule1.indexOf("null") == -1 && rule2.indexOf("null") == -1) {
-				rule = String.format("substr(value,%s,%s)", rule1, rule2);
-				if(rule.contains("substr(value,indexOf(value,'BNK','NUM',1*1),indexOf(value,'NUM','BNK',2*1))"))
-				{
-					System.out.println("Here");
-				}
+				//rule = String.format("substr(value,%s,%s)", rule1, rule2);
+				rule = this.generateRule(rule1, rule2);
 				if(isValid(rule))
 				{
 					this.program = rule;
@@ -72,7 +69,26 @@ public class Section implements GrammarTreeNode {
 		this.program = "null";
 		return "null";
 	}
-
+	public String generateRule(String lpos, String rpos){
+		String def = String.format("substr(value,%s,%s)", lpos, rpos);
+		if(convert == InternalTransformationLibrary.Functions.Cap.getValue()){
+			String func = InternalTransformationLibrary.getName(convert);
+			def = String.format("%s(%s)", func, def);
+		}
+		else if(convert == InternalTransformationLibrary.Functions.Firstletter.getValue()){
+			String func = InternalTransformationLibrary.getName(convert);
+			def = String.format("%s(%s)", func, def);
+		}
+		else if(convert == InternalTransformationLibrary.Functions.Lowercase.getValue()){
+			String func = InternalTransformationLibrary.getName(convert);
+			def = String.format("%s(%s)", func, def);
+		}
+		else if(convert == InternalTransformationLibrary.Functions.Uppercase.getValue()){
+			String func = InternalTransformationLibrary.getName(convert);
+			def = String.format("%s(%s)", func, def);
+		}
+		return def;
+	}
 	public String toProgram() {
 		// TODO Auto-generated method stub
 		return null;
@@ -80,6 +96,9 @@ public class Section implements GrammarTreeNode {
 
 	public GrammarTreeNode mergewith(GrammarTreeNode a) {
 		Section sec = (Section) a;
+		if(this.convert!= sec.convert){
+			return null;
+		}
 		Position x = this.pair[0].mergewith(sec.pair[0]);
 		Position y = this.pair[1].mergewith(sec.pair[1]);
 		if (x == null || y == null)
@@ -93,7 +112,6 @@ public class Section implements GrammarTreeNode {
 					&& this.orgStrings.size() == 1
 					&& this.orgStrings.get(0).compareTo(sec.orgStrings.get(0)) == 0) {
 				// merge within one example. test the loop expression
-				//
 				strs.addAll(this.orgStrings);
 				tars.add(this.tarStrings.get(0) + sec.tarStrings.get(0));
 				loop = true;
@@ -103,8 +121,9 @@ public class Section implements GrammarTreeNode {
 				tars.addAll(this.tarStrings);
 				tars.addAll(sec.tarStrings);
 			}
-
+			
 			Section st = new Section(pa, strs, tars, loop);
+			st.convert = this.convert;
 			return st;
 
 		}

@@ -18,9 +18,6 @@ class Interpreter(InterpreterType):
 	sys.setdefaultencoding("utf-8")
         trans = Translator(script)
         self.script=trans.translate(script) 
-    def func(self,name,paramlist):
-        if name == "h":
-            print "hello world"
     def execute(self,value):
         value = value.encode("utf-8","ignore")
 	value = value.decode("utf-8")

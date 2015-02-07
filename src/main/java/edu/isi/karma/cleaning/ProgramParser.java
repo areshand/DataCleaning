@@ -1,6 +1,8 @@
 package edu.isi.karma.cleaning;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.isi.karma.cleaning.ParseTreeNode.nodetype;
 
@@ -37,8 +39,16 @@ public class ProgramParser {
 		if (sposS <= 12) {
 			return;
 		}
+		//check the outside function and remove it
+		if(tok.indexOf("substr")>= 1){
+			Pattern p = Pattern.compile("\\((.+)\\)$");
+			Matcher x = p.matcher(tok);
+			x.find();
+			tok = x.group(1);
+			sposS = tok.indexOf("substr(value,", 0)+13;
+		}
 		int sposE = 0;
-		if(tok.charAt(sposS)<'9' && tok.charAt(sposS) > '0')
+		if(tok.charAt(sposS)<='9' && tok.charAt(sposS) >= '0')
 		{
 			sposE = tok.indexOf(",",sposS)-1;
 		}
@@ -46,7 +56,7 @@ public class ProgramParser {
 		{
 			sposE = tok.indexOf("),",sposS+11);
 		}
-		
+		System.out.println(String.format("pos: %d, %d",sposS,sposE));
 		String sposExpre = tok.substring(sposS, sposE + 1);
 		// find the endPosition
 		int eposS = sposE+2;

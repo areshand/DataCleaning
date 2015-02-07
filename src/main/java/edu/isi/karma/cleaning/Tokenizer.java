@@ -814,14 +814,15 @@ public class Tokenizer extends Lexer {
             {
             int LA5_8 = input.LA(2);
 
-            if ( (synpred6_Tokenizer()) ) {
-                alt5=6;
-            }
-            else if ( (synpred7_Tokenizer()) ) {
+            
+            if ( (synpred7_Tokenizer()) ) {
                 alt5=7;
             }
             else if ( (synpred8_Tokenizer()) ) {
                 alt5=8;
+            }
+            else if ( (synpred6_Tokenizer()) ) {
+                alt5=6;
             }
             else if ( (synpred9_Tokenizer()) ) {
                 alt5=9;
