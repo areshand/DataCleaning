@@ -1,6 +1,8 @@
 package edu.isi.karma.cleaning;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.isi.karma.cleaning.ParseTreeNode.nodetype;
 
@@ -37,8 +39,15 @@ public class ProgramParser {
 		if (sposS <= 12) {
 			return;
 		}
+		if(sposS >= 1){
+			Pattern p = Pattern.compile("\\((.+)\\)$");
+			Matcher m = p.matcher(tok);
+			m.find();
+			tok = m.group(1);
+			sposS = tok.indexOf("substr(value,", 0)+13;
+		}
 		int sposE = 0;
-		if(tok.charAt(sposS)<'9' && tok.charAt(sposS) > '0')
+		if(tok.charAt(sposS)<='9' && tok.charAt(sposS) >= '0')
 		{
 			sposE = tok.indexOf(",",sposS)-1;
 		}

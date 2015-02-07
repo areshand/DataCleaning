@@ -1,0 +1,11 @@
+============Detail Information===========2015/02/07 15:20:43
+
+Lin3rd.csv,LearnTime,6,GenTime,0,ExecTime,26,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.200000,Clf_acc,1.000000
+<_START>Arthur Joe Juan<_END>	A.J.J
+<_START>Jose Larry Scott<_END>	J.L.S
+attr_0:'A.J.J'
+
+============Summary Information===========
+2015/02/07 15:20:43
+
+Lin3rd.csv_failed,T_learn,6.000000,avg_learn,3.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,26.000000,avg_exec,13.000000,exp,2.000000,constraint,0.000000,clfacc,0.500000,parNum,1.000000
