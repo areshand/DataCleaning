@@ -17,8 +17,7 @@ public class InternalTransformationLibrary {
 		}
 	}
 
-	HashMap<Integer, TransformFunction> funcs = new HashMap<Integer, TransformFunction>();
-
+	public HashMap<Integer, TransformFunction> funcs = new HashMap<Integer, TransformFunction>();
 	public InternalTransformationLibrary() {
 		// add all the functions
 		ExactEqual equal = new ExactEqual();
@@ -32,7 +31,14 @@ public class InternalTransformationLibrary {
 		UpperCaseAll uca = new UpperCaseAll();
 		funcs.put(uca.getId(), uca);
 	}
-
+	public static String getName(int id){
+		for(Functions val:Functions.values()){
+			if(id == val.getValue()){
+				return val.name();
+			}
+		}
+		return "";
+	}
 	public Collection<Integer> getAllIDs() {
 		return funcs.keySet();
 	}

@@ -10,9 +10,9 @@ import java.util.Vector;
 
 import au.com.bytecode.opencsv.CSVReader;
 import edu.isi.karma.cleaning.DataPreProcessor;
+import edu.isi.karma.cleaning.EmailNotification;
 import edu.isi.karma.cleaning.ExampleCluster;
 import edu.isi.karma.cleaning.ExampleCluster.method;
-import edu.isi.karma.cleaning.EmailNotification;
 import edu.isi.karma.cleaning.ExampleSelection;
 import edu.isi.karma.cleaning.GradientDecendOptimizer;
 import edu.isi.karma.cleaning.InterpreterType;
@@ -802,7 +802,7 @@ public class Test {
 						}
 						psProgSynthesis.inite(examples, dpp, msger);
 						Vector<ProgramRule> pls = new Vector<ProgramRule>();
-						Collection<ProgramRule> ps = psProgSynthesis.run_main();
+						Collection<ProgramRule> ps = psProgSynthesis.adaptive_main();
 						// collect history contraints
 						msger.updateCM_Constr(psProgSynthesis.partiCluster
 								.getConstraints());
@@ -834,11 +834,13 @@ public class Test {
 										.getClassForValue(entries.get(j)[0]);
 								String tmps = worker.execute_debug(entries
 										.get(j)[0]);
+								
 								HashMap<String, String> dict = new HashMap<String, String>();
 								dict.put("class", classlabel);
 								UtilTools.StringColorCode(entries.get(j)[0],
 										tmps, dict);
-								String s = dict.get("Tar");
+								String s = worker.execute(entries.get(j)[0]);
+								dict.put("Tar", s);
 								if (Test.isExample(entries.get(j)[0], examples)) {
 									s = entries.get(j)[1];
 								}
@@ -1014,8 +1016,7 @@ public class Test {
 		}
 		dCollection.print();
 		dCollection.print1();
-		Prober.displayProgram();
-		
+		Prober.displayProgram();		
 	}
 
 	public static boolean isExample(String var, Vector<String[]> examples) {

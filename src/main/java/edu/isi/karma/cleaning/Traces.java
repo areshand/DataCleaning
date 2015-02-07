@@ -116,8 +116,13 @@ public class Traces implements GrammarTreeNode {
 		//this.loopline = consolidateDiffLoop(lSeg);
 	}
 
+	Vector<Segment> findSegs(int pos){
+		Vector<Segment> ret = new Vector<Segment>();
+		ret = SegmentMapper.findMapping(orgNodes, tarNodes, pos);
+		return ret;
+	}
 	// find all segments starting from pos
-	Vector<Segment> findSegs(int pos) {
+	/*Vector<Segment> findSegs(int pos) {
 		Vector<Segment> segs = new Vector<Segment>();
 		if (tarNodes.size() == 0) {
 			int[] mapping = { 0, 0 };
@@ -240,7 +245,7 @@ public class Traces implements GrammarTreeNode {
 			}
 		}
 		return segs;
-	}
+	}*/
 
 	public Traces mergewith(Traces t) {
 		// merge segment lines
@@ -884,30 +889,6 @@ public class Traces implements GrammarTreeNode {
 		}
 	}
 
-	public static boolean test() {
-		String[] xStrings = { "<_START>A_BB_C_DD_E<_END>", "ABBCDDE" };
-		String[] yStrings = { "<_START>F_GG_H_II_J<_END>", "FGGHIIJ" };
-		Vector<String[]> examples = new Vector<String[]>();
-		examples.add(xStrings);
-		examples.add(yStrings);
-		Vector<Vector<TNode>> org = new Vector<Vector<TNode>>();
-		Vector<Vector<TNode>> tar = new Vector<Vector<TNode>>();
-		for (int i = 0; i < examples.size(); i++) {
-			Ruler r = new Ruler();
-			r.setNewInput(examples.get(i)[0]);
-			org.add(r.vec);
-			Ruler r1 = new Ruler();
-			r1.setNewInput(examples.get(i)[1]);
-			tar.add(r1.vec);
-		}
-		Traces traces1 = new Traces(org.get(0), tar.get(0));
-		traces1.tracePrint();
-		Traces traces2 = new Traces(org.get(1), tar.get(1));
-		Traces t = traces1.mergewith(traces2);
-		t.tracePrint();
-		return true;
-	}
-
 	public void emptyState() {
 		for (GrammarTreeNode t : this.totalOrderVector) {
 			t.emptyState();
@@ -936,10 +917,6 @@ public class Traces implements GrammarTreeNode {
 			size += t.size();
 		}
 		return size;
-	}
-
-	public static void main(String[] args) {
-		Traces.test();
 	}
 
 	@Override

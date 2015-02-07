@@ -11,20 +11,22 @@ import re
 import string
 '''template function section'''
 Function_Debug = False
+def Cap(str):
+    if str == "":
+        return ""
+    return str[:1].upper()+str[1:].lower()
+def Uppercase(str):
+    return str.upper()
+def Lowercase(str):
+    return str.lower();
+def Firstletter(str):
+    if str == "":
+        return ""
+    return str[0:1]
 
 def indexOf(str, lregx, rregx, cnt=0):
         '''find the position'''
         pos = -1
-#        if lregx == "^":
-#           if cnt != 1 and cnt != -1:
-#               return None
-#           pos = 0
-#           return pos
-#        if rregx == "$":
-#           if cnt != 1 and cnt != -1:
-#               return None
-#           pos = len(str)
-#           return pos
         patternstr = "(" + lregx + ")" + rregx
         pattern = re.compile(patternstr)
         tpos = 0

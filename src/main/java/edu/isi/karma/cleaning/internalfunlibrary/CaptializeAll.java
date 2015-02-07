@@ -31,7 +31,7 @@ public class CaptializeAll implements TransformFunction {
 		try {
 			for (TNode t : sour) {
 				ret += Character.toUpperCase(t.text.charAt(0))
-						+ t.text.substring(1);
+						+ t.text.substring(1).toLowerCase();
 			}
 			if(ret.compareTo(UtilTools.print(sour)) == 0)
 			{
