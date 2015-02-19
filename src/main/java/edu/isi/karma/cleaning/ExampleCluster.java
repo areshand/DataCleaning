@@ -158,9 +158,6 @@ public class ExampleCluster {
 						legalParitions.put(key, false);
 						continue;
 					}
-					// double par_dist = getDistance(pars.get(i), pars.get(j));
-					// double par_dist = getCompScore(pars.get(i), pars.get(j),
-					// pars);// sumit heuristic
 					double par_dist = getDistance(pars.get(i), pars.get(j),
 							pars);
 					if (par_dist < mindist) {

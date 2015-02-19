@@ -143,16 +143,10 @@ public class Test {
 				ExampleSelection.firsttime = false;
 				// accuracy record code
 				ArrayList<double[]> accArrayList = new ArrayList<double[]>();
-				long stime = System.currentTimeMillis();
-				boolean overtime = true;
 				while (true) // repeat as no incorrect answer appears.
 				{
 					if (examples.size() == 4) {
 						System.out.println("Hello World");
-					}
-					if (System.currentTimeMillis() - stime > 600000) {
-						overtime = false;
-						break;
 					}
 					long checknumber = 1;
 					long iterAfterNoFatalError = 0;
@@ -780,15 +774,8 @@ public class Test {
 					ArrayList<double[]> accArrayList = new ArrayList<double[]>();
 					long stime = System.currentTimeMillis();
 					boolean overtime = true;
-					while (true) // repeat as no incorrect answer appears.
+					while (true && examples.size() <= 11) // repeat as no incorrect answer appears.
 					{
-						if (examples.size() == 8) {
-							System.out.println("Hello World");
-						}
-						if (System.currentTimeMillis() - stime > 600000) {
-							overtime = false;
-							break;
-						}
 						long checknumber = 1;
 						long iterAfterNoFatalError = 0;
 						long isvisible = 0;
@@ -1012,7 +999,6 @@ public class Test {
 		dCollection.print();
 		dCollection.print1();
 		Prober.displayProgram();
-		//
 	}
 
 	public static boolean isExample(String var, Vector<String[]> examples) {

@@ -65,14 +65,8 @@ public class Traces implements GrammarTreeNode {
 			vs.add(c);
 			tlines.add(vs);
 		}
-		long stime = System.currentTimeMillis();
 		// find all possible segments starting from a position
 		while (tlines.size() > 0) {
-			if ((System.currentTimeMillis() - stime) / 1000 > time_limit) {
-				// System.out.println("Exceed the time limit");
-				lines.clear();
-				break; // otherwise takes too much time
-			}
 			Vector<Vector<Segment>> nlines = new Vector<Vector<Segment>>();
 			Vector<Segment> segs = tlines.remove(0);
 			int curPos = segs.get(segs.size() - 1).end;
@@ -106,11 +100,11 @@ public class Traces implements GrammarTreeNode {
 		}
 		// detect loops
 		// verify loops
-		for (Vector<Segment> vgt : lines) {
+		/*for (Vector<Segment> vgt : lines) {
 			Vector<Vector<GrammarTreeNode>> lLine = this.genLoop(vgt);
 			if (lLine != null)
 				lSeg.addAll(lLine);
-		}
+		}*/
 		// consolidate
 		this.rawlines = vSeg;
 		this.traceline = consolidateDiffSize(vSeg);
@@ -497,12 +491,7 @@ public class Traces implements GrammarTreeNode {
 			Vector<Vector<GrammarTreeNode>> paths) {
 		HashMap<Integer, Template> resHashMap = new HashMap<Integer, Template>();
 		HashMap<Integer, Vector<Template>> tmpStore = new HashMap<Integer, Vector<Template>>();
-		long stime = System.currentTimeMillis();
 		for (Vector<GrammarTreeNode> vg : paths) {
-			if ((System.currentTimeMillis() - stime) / 1000 > time_limit) {
-				// System.out.println("Exceed the time limit");
-				break; // otherwise takes too much time
-			}
 			int key = vg.size();
 			if (tmpStore.containsKey(key)) {
 				tmpStore.get(key).add(new Template(vg));

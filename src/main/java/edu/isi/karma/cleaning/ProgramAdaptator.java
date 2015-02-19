@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.xml.xpath.XPath;
-
 import org.perf4j.StopWatch;
 import org.perf4j.log4j.Log4JStopWatch;
 
@@ -429,16 +427,17 @@ public class ProgramAdaptator {
 	public ArrayList<Patcher> align(ArrayList<Patcher> tTree, Traces wSpace,
 			ArrayList<String[]> preExps,HashMap<String, ArrayList<String>> prog2Eval, HashMap<String, String> prog2New) {
 		ArrayList<Patcher> res = new ArrayList<Patcher>();
-		Vector<String> orgs = new Vector<String>();
+		/*Vector<String> orgs = new Vector<String>();
 		//get all original values
 		for(GrammarTreeNode node: wSpace.traceline.values().iterator().next().body)
 		{
 			Segment xn = (Segment)node;
 			if(!xn.isConstSegment())
 			{
+				System.out.println(""+xn.section.toString());
 				orgs = xn.section.get(0).orgStrings;
 			}
-		}
+		}*/
 		for (Patcher pat : tTree) {
 			//prepare the raw data
 			ArrayList<String> tarStrings = new ArrayList<String>();
