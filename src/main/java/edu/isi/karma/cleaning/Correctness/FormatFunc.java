@@ -82,7 +82,7 @@ public class FormatFunc implements VerificationFunc {
 			}
 		}
 		
-		Prober.printFeatureandWeight(tmp, cmeans, dmetric);
+		//Prober.printFeatureandWeight(tmp, cmeans, dmetric);
 	}
 			
 	public String verify(TransRecord record) {

@@ -7,18 +7,16 @@ import java.util.List;
 import java.util.Vector;
 
 import edu.isi.karma.cleaning.Partition;
-import edu.isi.karma.cleaning.Patcher;
 import edu.isi.karma.cleaning.ProgramRule;
 import edu.isi.karma.cleaning.TNode;
 import edu.isi.karma.cleaning.UtilTools;
-import edu.isi.karma.cleaning.Correctness.TransRecord;
+import edu.isi.karma.cleaning.Patcher;
 
 public class Prober {
 	public static ArrayList<String> track1 = new ArrayList<String>();
 	public static String target;
 	public static long adaptedProg = 0;
 	public static MultiIndex records = new MultiIndex();
-
 	public static String PartitionDisplay1(Vector<Partition> vp) {
 		String res = "";
 		for (Partition p : vp) {
@@ -31,79 +29,53 @@ public class Prober {
 		}
 		return res;
 	}
-
-	public static void trackProgram(Vector<Partition> pars, ProgramRule r) {
-		for (Partition p : pars) {
+	public static void trackProgram(Vector<Partition> pars, ProgramRule r)
+	{
+		for(Partition p: pars)
+		{
 			String rule = r.getStringRule(p.label);
-			for (Vector<TNode> nodes : p.orgNodes) {
+			for(Vector<TNode> nodes: p.orgNodes)
+			{
 				String exp = UtilTools.print(nodes);
-				String[] keys = { exp };
+				String[] keys = {exp};
 				records.add(Arrays.asList(keys), rule);
 			}
 		}
 	}
-
-	public static void displayProgram() {
+	public static void displayProgram()
+	{
 		List<String> pList = records.getPathes();
-		for (String line : pList) {
-			System.out.println("" + line);
+		for(String line: pList)
+		{
+			System.out.println(""+line);
 		}
 	}
-
-	public static void printFeatureandWeight(
-			HashMap<String, ArrayList<TransRecord>> tmp,
-			HashMap<String, double[]> cmeans, double[] weights) {
-		String res = "";
-		for (String k : tmp.keySet()) {
-			ArrayList<TransRecord> aTransRecords = tmp.get(k);
-			for (TransRecord r : aTransRecords) {
-				String ts = Arrays.toString(r.features);
-				res += k + "," + ts.substring(1, ts.length() - 1) + "\n";
-			}
-		}
-		res += "\n";
-		for (String k : cmeans.keySet()) {
-			String ts = Arrays.toString(cmeans.get(k));
-			res += ts.substring(1, ts.length() - 1) + "\n";
-		}
-		res += "\n";
-		res += removeBracket(Arrays.toString(weights)) + "\n";
-		System.out.println("" + res);
-	}
-
-	public static void tracePatchers(String ptree, ArrayList<Patcher> errNodes,
-			ArrayList<String[]> iexps, String[] exp, boolean valid,
-			HashMap<String, String> dics) {
+	public static void tracePatchers(String ptree,ArrayList<Patcher> errNodes, ArrayList<String[]> iexps, String[] exp, boolean valid,HashMap<String, String> dics)
+	{
 		System.out.println("========Programs to fix==========");
-		System.out.println("Program: " + ptree);
+		System.out.println("Program: "+ptree);
 		String res = "";
-		for (String[] x : iexps) {
+		for(String[] x: iexps)
+		{
 			res += String.format("%s   %s\n", x[0], x[1]);
 		}
-
-		for (String k : dics.keySet()) {
-			System.out.println("dict: "
-					+ String.format("%s, %s", k, dics.get(k)));
+		
+		for(String k:dics.keySet())
+		{
+			System.out.println("dict: "+String.format("%s, %s", k, dics.get(k)));
 		}
-		for (Patcher p : errNodes) {
-			System.out.println("old Exp: \n" + res);
-			System.out.println("new Exp: "
-					+ String.format("%s  %s", exp[0], exp[1]));
-			System.out.println("old subs: " + p.programNodes);
-			System.out.println("new subs: " + p.replaceNodes);
-			if (!valid)
+		for(Patcher p:errNodes)
+		{
+			System.out.println("old Exp: \n"+res);
+			System.out.println("new Exp: "+ String.format("%s  %s", exp[0],exp[1]));
+			System.out.println("old subs: "+p.programNodes);
+			System.out.println("new subs: "+p.replaceNodes);
+			if(!valid)
 				System.out.println("Unsuccessful adaptation");
-			else {
-				adaptedProg++;
+			else{
+				adaptedProg ++;
 			}
 		}
 		System.out.println("=================================");
-	}
-
-	public static String removeBracket(String s) {
-		if (s.length() <= 2)
-			return "";
-		else
-			return s.substring(1, s.length() - 1);
 	}
 }

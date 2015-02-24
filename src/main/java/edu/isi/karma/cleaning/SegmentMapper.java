@@ -27,19 +27,17 @@ public class SegmentMapper {
 		Dataitem root = new Dataitem();
 		root.tarpos = pos;
 		ArrayList<Dataitem> path = new ArrayList<Dataitem>();
-		ArrayList<ArrayList<Dataitem>> ret = new ArrayList<ArrayList<Dataitem>>();
+		//ArrayList<ArrayList<Dataitem>> ret = new ArrayList<ArrayList<Dataitem>>();
 		
-		recursiveSearch(org, tar, root, path, ret);
-		res = convert2Segments(ret, org, tar);
+		Vector<Dataitem> ret = recursiveSearch(org, tar, root, path);
+		
+		res = convert2Segments(new ArrayList<Dataitem>(ret), org, tar);
 		return res;
 	}
-	public static Vector<Segment> convert2Segments(ArrayList<ArrayList<Dataitem>> repo, Vector<TNode> org, Vector<TNode> tar){
+	public static Vector<Segment> convert2Segments(ArrayList<Dataitem> repo, Vector<TNode> org, Vector<TNode> tar){
 		HashMap<String, ArrayList<Dataitem>> groups = new HashMap<String,ArrayList<Dataitem>>();
 		Vector<Segment> ret = new Vector<Segment>();
-		for(ArrayList<Dataitem> line: repo){
-			if(line.size() == 0)
-				continue;
-			Dataitem item = convert(line, org, tar);
+		for(Dataitem item: repo){
 			if(item.range[0] < 0){
 				//create constant segment and return
 				Vector<TNode> cont = new Vector<TNode>();
@@ -50,7 +48,7 @@ public class SegmentMapper {
 				ret.add(seg);
 				return ret;
 			}
-			String key = item.tarpos + ", "+ item.tarend;
+			String key = item.tarpos + ", "+ item.tarend; //key for same segment. a segment can contain multiple sections.
 			if(groups.containsKey(key))
 			{
 				groups.get(key).add(item);
@@ -108,13 +106,14 @@ public class SegmentMapper {
 		return ret;
 	}
 
-	public static void recursiveSearch(Vector<TNode> org, Vector<TNode> tar,
-			Dataitem root, ArrayList<Dataitem> path, ArrayList<ArrayList<Dataitem>> repo) {
-		if (root.tarpos >= tar.size()) {
+	public static Vector<Dataitem> recursiveSearch(Vector<TNode> org, Vector<TNode> tar,
+			Dataitem root, ArrayList<Dataitem> path) {
+		/*if (root.tarpos >= tar.size()) {
 			repo.add(path);
-		}
+		}*/
 		Vector<Dataitem> updated = makeOneMove(org, tar, root);
-		if(updated.size() == 0){
+		return updated;
+		/*if(updated.size() == 0){
 			repo.add(path);
 		}
 		
@@ -123,11 +122,13 @@ public class SegmentMapper {
 			newlist.addAll(path);
 			newlist.add(elem);
 			Dataitem child = new Dataitem();
+			child.range[0] = elem.range[0];
+			child.range[1] = elem.range[1];
 			child.funcid = elem.funcid;
 			child.tarpos = elem.tarpos + 1;
 			recursiveSearch(org, tar, child, newlist, repo);
 		}
-		return;
+		return;*/
 	}
 	//match one token in the target token seq
 	public static Vector<Dataitem> makeOneMove(Vector<TNode> org,
@@ -215,8 +216,8 @@ public class SegmentMapper {
 
 	@Test
 	public void selfTest() {
-		String[] s1 = {"<_START>MELVIN Julian<_END>"};
-		String[] s2 = {"Julian"};
+		String[] s1 = {"<_START>PA2050 <_END>"};
+		String[] s2 = {"2050 PA"};
 		for (int i = 0; i < s1.length; i++) {
 			Vector<TNode> ts1 = UtilTools.convertStringtoTNodes(s1[i]);
 			Vector<TNode> ts2 = UtilTools.convertStringtoTNodes(s2[i]);

@@ -790,7 +790,7 @@ public class Test {
 						}
 						psProgSynthesis.inite(examples, dpp, msger);
 						Vector<ProgramRule> pls = new Vector<ProgramRule>();
-						Collection<ProgramRule> ps = psProgSynthesis.adaptive_main();
+						Collection<ProgramRule> ps = psProgSynthesis.run_main();
 						// collect history contraints
 						msger.updateCM_Constr(psProgSynthesis.partiCluster
 								.getConstraints());
