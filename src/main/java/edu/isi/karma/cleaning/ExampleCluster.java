@@ -11,7 +11,6 @@ import java.util.Vector;
 
 import org.apache.commons.math.optimization.linear.LinearConstraint;
 import org.apache.commons.math.optimization.linear.LinearObjectiveFunction;
-import org.python.antlr.PythonParser.return_stmt_return;
 
 import edu.isi.karma.cleaning.features.Feature;
 
@@ -91,7 +90,7 @@ public class ExampleCluster {
 					g.add(line);
 				}
 				String res = "";
-				res = UtilTools.createkey(new ArrayList(group));
+				res = UtilTools.createkey(new ArrayList<String[]>(group));
 				legalParitions.put(res, false);
 			}
 		}
@@ -131,7 +130,7 @@ public class ExampleCluster {
 			ProgramAdaptator pAdapter = new ProgramAdaptator();
 			ArrayList<String[]> exps = UtilTools
 					.extractExamplesinPartition(pars);
-			String prog = pAdapter.adapt(pSynthesis.msGer.exp2Space,
+			pAdapter.adapt(pSynthesis.msGer.exp2Space,
 					pSynthesis.msGer.exp2program, exps);
 			return pars;
 		}
@@ -369,7 +368,7 @@ public class ExampleCluster {
 			 */
 		}
 		for (Partition key : testResult.keySet()) {
-			Map dicttmp = UtilTools.sortByComparator(testResult.get(key));
+			Map<?, ?> dicttmp = UtilTools.sortByComparator(testResult.get(key));
 			/** print unlabeled data **/
 			// System.out.println("Partition: " + key.label);
 			// ProgTracker.printUnlabeledData(dicttmp);

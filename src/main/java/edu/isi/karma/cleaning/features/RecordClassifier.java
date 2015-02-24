@@ -17,7 +17,6 @@ import libsvm.svm_print_interface;
 import libsvm.svm_problem;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.python.modules.jffi.CType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -211,7 +210,6 @@ public class RecordClassifier implements PartitionClassifierType {
 	}
 
 	public void NormalizeTrainingData() {
-		ArrayList<String[]> csvData = new ArrayList<String[]>();
 		int featuresize = rf.getFeatureNames().size();
 		double[] maxvals = new double[featuresize];
 		maxvals = UtilTools.initArray(maxvals, -1);
@@ -248,7 +246,6 @@ public class RecordClassifier implements PartitionClassifierType {
 	}
 
 	public double getAccuracy() {
-		double res = 0.0;
 		int totalCnt = trainData.size();
 		int errorCnt = 0;
 		for (int i = 0; i < trainData.size(); i++) {
@@ -340,8 +337,8 @@ public class RecordClassifier implements PartitionClassifierType {
 				if (datasize < fold) {
 					// add its own data until reach the fold number
 					int times = fold / datasize;
-					ArrayList<Integer> ditems = (ArrayList<Integer>) labPos
-							.get(l).clone();
+					@SuppressWarnings("unchecked")
+					ArrayList<Integer> ditems = (ArrayList<Integer>) labPos.get(l).clone();
 					for (int t = 1; t < times+1; t++) {
 						labPos.get(l).addAll(ditems);
 					}
@@ -392,7 +389,6 @@ public class RecordClassifier implements PartitionClassifierType {
 				.toPrimitive(tars.toArray(new Double[tars.size()])); // target
 																		// values
 		svm_parameter parameters = new svm_parameter();
-		int featureNum = this.rf.getFeatureNames().size();
 
 		parameters.gamma = gamma;
 		parameters.svm_type = ctype;

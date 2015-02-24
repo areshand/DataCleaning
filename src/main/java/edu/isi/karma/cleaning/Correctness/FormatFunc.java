@@ -1,11 +1,9 @@
 package edu.isi.karma.cleaning.Correctness;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import edu.isi.karma.cleaning.UtilTools;
-import edu.isi.karma.cleaning.Research.Prober;
 
 /*
  * unseen formats detections: 
@@ -19,7 +17,6 @@ import edu.isi.karma.cleaning.Research.Prober;
  */
 
 public class FormatFunc implements VerificationFunc {
-	private double threshold = 0.05;
 	private int funid = 1;
 	private HashMap<String, double[]> cmeans = new HashMap<String, double[]>();
 	private HashMap<String, double[]> mean_var = new HashMap<String, double[]>();
@@ -51,7 +48,6 @@ public class FormatFunc implements VerificationFunc {
 		// find the means 
 		for(String key: tmp.keySet())
 		{
-			double mdist = -1.0;
 			ArrayList<TransRecord> tdata = tmp.get(key);
 			if(tdata.size() > 0 || tdata.get(0).features.length > 0)
 			{
@@ -92,23 +88,6 @@ public class FormatFunc implements VerificationFunc {
 		{
 			return this.funid+"";
 		}
-		/*double[] dists = new double[cmeans.keySet().size()];
-		int i = 0;
-		for(String key: cmeans.keySet())
-		{
-			double d = UtilTools.distance(record.features, cmeans.get(key), dmetric);
-			dists[i] = d;
-			i++;
-		}
-		Arrays.sort(dists);
-		System.out.println("Dists: "+Arrays.toString(dists));
-		for(int k = 1; k < dists.length; k++)
-		{
-			if(Math.abs(dists[k-1]- dists[k])/Math.min(dists[k-1], dists[k]) <= threshold)
-			{
-				return this.funid+"";
-			}
-		}*/
 		return "0";
 	}
 

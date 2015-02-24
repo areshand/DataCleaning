@@ -97,7 +97,7 @@ public class Traces implements GrammarTreeNode {
 		}
 		
 		Vector<Vector<GrammarTreeNode>> vSeg = new Vector<Vector<GrammarTreeNode>>();
-		Vector<Vector<GrammarTreeNode>> lSeg = new Vector<Vector<GrammarTreeNode>>();
+		//Vector<Vector<GrammarTreeNode>> lSeg = new Vector<Vector<GrammarTreeNode>>();
 		for (Vector<Segment> vs : lines) {
 			Vector<GrammarTreeNode> vsGrammarTreeNodes = UtilTools
 					.convertSegVector(vs);

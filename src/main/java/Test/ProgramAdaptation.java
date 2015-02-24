@@ -38,17 +38,16 @@ public class ProgramAdaptation {
 		ArrayList<String[]> exps = new ArrayList<String[]>();
 		exps.add(e1);
 		exps.add(e2);
-//		exps.add(e3);
-//		exps.add(e4);
-//		exps.add(e5);
-//		exps.add(e6);
-//		exps.add(e7);
+		exps.add(e3);
+		exps.add(e4);
+		exps.add(e5);
+		exps.add(e6);
+		exps.add(e7);
 		edu.isi.karma.cleaning.Research.Test.test_adaptive_seq(exps);
 	}
 	
 	public void conceptValidation()
 	{
-		ProgramAdaptator pAdaptor = new ProgramAdaptator();
 		String[] e1 = {"Name: Amber Cmber","Name: Amber NC"};
 		String[] e2 = {"Name: Cindie Kindie", "Name: Cindie NK"};
 		String[] e3 = {"Name: Kite Ciao", "Name: Kiao NC"};
@@ -126,7 +125,7 @@ public class ProgramAdaptation {
 		String[] mt = { "<_START>VVery LLarge DDataBBase<_END>", "VVLLDDBB" };
 		String[] mt1 = { "<_START>Mr. Andrew Dusk<_END>", "Dusk, A" };
 		examples.add(mt);
-	//	examples.add(mt1);
+		examples.add(mt1);
 		Vector<Vector<TNode>> orgVector = new Vector<Vector<TNode>>();
 		Vector<Vector<TNode>> tarVector = new Vector<Vector<TNode>>();
 		for (int i = 0; i < examples.size(); i++) {
@@ -144,7 +143,6 @@ public class ProgramAdaptation {
 			ovt.add(orgVector.get(i));
 			tvt.add(tarVector.get(i));
 			Partition pt = new Partition(ovt, tvt);
-			String program = pt.toProgram();
 			// ProgramRule programRule = new ProgramRule(pt.getProgram());
 			System.out.println("pt program: " + pt.getProgram());
 			Vector<GrammarTreeNode> nodes = pt.trace.totalOrderVector
@@ -181,7 +179,6 @@ public class ProgramAdaptation {
 	//@Test
 	public void testProgramParsing()
 	{
-		String x = "'";
 		String prog = "loop(value,r\"substr(value,indexOf(value,'ANY','UWRDUWRD',1*counter),indexOf(value,'UWRD','LWRD',1*counter))\")+substr(value,indexOf(value,'START','UWRD',1*1),indexOf(value,'UWRD','UWRD',1*1))";
 		ProgramParser parser = new ProgramParser();
 		ParseTreeNode root = parser.parse(prog);

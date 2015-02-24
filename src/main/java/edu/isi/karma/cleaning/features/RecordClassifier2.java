@@ -270,29 +270,6 @@ public class RecordClassifier2 implements PartitionClassifierType {
 		}
 	}
 
-	public void TestFile() {
-		String path = "/Users/bowu/Research/testOther/cls.csv";
-		try {
-			HashMap<String, ArrayList<String>> traindata = new HashMap<String, ArrayList<String>>();
-			CSVReader cr = new CSVReader(new FileReader(new File(path)), ',',
-					'"', '\0');
-			String[] line;
-			while ((line = cr.readNext()) != null && line.length > 0) {
-				String value = line[0];
-				String label = line[1];
-				if (traindata.containsKey(label)) {
-					traindata.get(label).add(value);
-				} else {
-					ArrayList<String> arrayList = new ArrayList<String>();
-					arrayList.add(value);
-					traindata.put(label, arrayList);
-				}
-			}
-			testClassifier(traindata);
-		} catch (Exception e) {
-			logger.error("error in testing");
-		}
-	}
 
 	public void testClassifier(HashMap<String, ArrayList<String>> traindata) {
 		HashSet<String[]> testData = new HashSet<String[]>();

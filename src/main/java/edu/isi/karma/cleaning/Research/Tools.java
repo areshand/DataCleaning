@@ -26,24 +26,21 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Vector;
 
 import org.apache.mahout.math.Arrays;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import edu.isi.karma.cleaning.DataPreProcessor;
 import edu.isi.karma.cleaning.InterpreterType;
 import edu.isi.karma.cleaning.Messager;
 import edu.isi.karma.cleaning.ProgSynthesis;
 import edu.isi.karma.cleaning.ProgramRule;
-import au.com.bytecode.opencsv.CSVWriter;
 
 public class Tools {
 	public void transformFile(String fpath) {
 		try {
 			Vector<String[]> examples = new Vector<String[]>();
-			ArrayList<String> data = new ArrayList<String>();
 			// read and write the data
 			File nf = new File(fpath);
 			BufferedReader cr = new BufferedReader(new FileReader(fpath));

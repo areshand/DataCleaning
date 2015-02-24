@@ -2,10 +2,7 @@ package edu.isi.karma.cleaning;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Vector;
-
-import org.junit.Test;
 
 import edu.isi.karma.cleaning.internalfunlibrary.InternalTransformationLibrary;
 import edu.isi.karma.cleaning.internalfunlibrary.TransformFunction;

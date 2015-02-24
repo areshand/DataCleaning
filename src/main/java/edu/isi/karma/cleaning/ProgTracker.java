@@ -27,6 +27,7 @@ public class ProgTracker {
 		System.out.println("TOMERGE:" + a + "\n" + b);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void printUnlabeledData(Map dicttmp) {
 		for (Object xkey : dicttmp.keySet()) {
 			System.out.println(String.format("Entry: %s,%f", xkey,dicttmp.get(xkey)));

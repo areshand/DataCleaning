@@ -3,10 +3,8 @@ package Test;
 import java.util.ArrayList;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.apache.mahout.math.jet.stat.Probability;
 
 import edu.isi.karma.cleaning.Research.Prober;
-import arq.tokens;
 
 public class JavaTest {
 	public String print(ArrayList<long[]> res, ArrayList<String[]> itertime, ArrayList<Long> data) {
@@ -74,7 +72,6 @@ public class JavaTest {
 		tp.add(e1);
 		edu.isi.karma.cleaning.Research.Test.test_seq(tp);
 		ArrayList<String[]> x = new ArrayList<String[]>();
-		ArrayList<ArrayList<Long>> changed = new ArrayList<ArrayList<Long>>();
 		for (int l = 8; l < 26; l++) {
 		ArrayList<String[]> exps = jt.autoDataFeed(l);
 		ArrayList<long[]> timeArrayList = new ArrayList<long[]>();

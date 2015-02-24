@@ -3,8 +3,6 @@ package edu.isi.karma.cleaning;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import riotcmd.infer;
-
 public class PositionSet implements GrammarTreeNode {
 
 	ArrayList<Position> spaces = new ArrayList<Position>();

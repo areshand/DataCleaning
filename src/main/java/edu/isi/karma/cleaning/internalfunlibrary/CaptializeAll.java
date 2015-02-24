@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import edu.isi.karma.cleaning.TNode;
 import edu.isi.karma.cleaning.UtilTools;
-import edu.isi.karma.cleaning.internalfunlibrary.InternalTransformationLibrary.Functions;
 
 public class CaptializeAll implements TransformFunction {
 
