@@ -27,17 +27,21 @@ public class SegmentMapper {
 		Dataitem root = new Dataitem();
 		root.tarpos = pos;
 		ArrayList<Dataitem> path = new ArrayList<Dataitem>();
-		//ArrayList<ArrayList<Dataitem>> ret = new ArrayList<ArrayList<Dataitem>>();
+		ArrayList<ArrayList<Dataitem>> ret = new ArrayList<ArrayList<Dataitem>>();
 		
-		Vector<Dataitem> ret = recursiveSearch(org, tar, root, path);
+		recursiveSearch(org, tar, root, path,ret);
 		
-		res = convert2Segments(new ArrayList<Dataitem>(ret), org, tar);
+		res = convert2Segments(ret, org, tar);
 		return res;
 	}
-	public static Vector<Segment> convert2Segments(ArrayList<Dataitem> repo, Vector<TNode> org, Vector<TNode> tar){
+	public static Vector<Segment> convert2Segments(ArrayList<ArrayList<Dataitem>> repo , Vector<TNode> org, Vector<TNode> tar){
 		HashMap<String, ArrayList<Dataitem>> groups = new HashMap<String,ArrayList<Dataitem>>();
 		Vector<Segment> ret = new Vector<Segment>();
-		for(Dataitem item: repo){
+		for(ArrayList<Dataitem> line: repo){
+			if(line.size() == 0){
+				continue;
+			}
+			Dataitem item =convert(line, org, tar);
 			if(item.range[0] < 0){
 				//create constant segment and return
 				Vector<TNode> cont = new Vector<TNode>();
@@ -90,10 +94,10 @@ public class SegmentMapper {
 				mapping[0] = path.get(i).range[0];
 			}
 			if(path.get(i).range[1] > mapping[1]){
-				mapping[1] = path.get(i).range[1]+1;
+				mapping[1] = path.get(i).range[1];
 			}
 		}
-		
+		mapping[1] += 1;		
 		if(path.size() <= 0)
 			return null;
 		mapping[2] = path.get(0).funcid;
@@ -106,14 +110,13 @@ public class SegmentMapper {
 		return ret;
 	}
 
-	public static Vector<Dataitem> recursiveSearch(Vector<TNode> org, Vector<TNode> tar,
-			Dataitem root, ArrayList<Dataitem> path) {
-		/*if (root.tarpos >= tar.size()) {
+	public static void recursiveSearch(Vector<TNode> org, Vector<TNode> tar,
+			Dataitem root, ArrayList<Dataitem> path, ArrayList<ArrayList<Dataitem>> repo) {
+		if (root.tarpos >= tar.size()) {
 			repo.add(path);
-		}*/
+		}
 		Vector<Dataitem> updated = makeOneMove(org, tar, root);
-		return updated;
-		/*if(updated.size() == 0){
+		if(updated.size() == 0){
 			repo.add(path);
 		}
 		
@@ -128,7 +131,7 @@ public class SegmentMapper {
 			child.tarpos = elem.tarpos + 1;
 			recursiveSearch(org, tar, child, newlist, repo);
 		}
-		return;*/
+		return;
 	}
 	//match one token in the target token seq
 	public static Vector<Dataitem> makeOneMove(Vector<TNode> org,
@@ -143,7 +146,14 @@ public class SegmentMapper {
 		String tstr = t.text;
 		boolean nomapping = true;
 		boolean followChecking = false;
-		for (int i = 0; i < org.size(); i++) {
+		int start = 0;
+		int end = org.size();
+		//if not the first time, only resume searching not perform full range search
+		if(root.range[1] != -1){
+			start = root.range[1]+1;
+			end = start+1;
+		}
+		for (int i = start; i < end; i++) {
 			String prefix = "";
 			if (root.funcid == InternalTransformationLibrary.Functions.NonExist.getValue()) {
 				for (TransformFunction tf : itfl.getAllFuncs()) {
@@ -214,8 +224,7 @@ public class SegmentMapper {
 		}
 	}
 
-	@Test
-	public void selfTest() {
+	public static void main(String[] args) {
 		String[] s1 = {"<_START>PA2050 <_END>"};
 		String[] s2 = {"2050 PA"};
 		for (int i = 0; i < s1.length; i++) {

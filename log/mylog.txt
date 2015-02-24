@@ -1,0 +1,171 @@
+============Detail Information===========2015/02/24 10:38:24
+
+Lin10th.csv,LearnTime,4,GenTime,0,ExecTime,131,Exp_cnt,1,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>Annita Nicely<_END>	A.N.
+attr_0:Firstletter(substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','BNK',1*1)))+'.'+Firstletter(substr(value,indexOf(value,'BNK','WORD',1*1),indexOf(value,'WORD','END',1*1)))+'.'
+
+Lin11.csv,LearnTime,0,GenTime,0,ExecTime,96,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.800000,Clf_acc,1.000000
+<_START>January 8<_END>	January
+<_START>2007 (September)<_END>	September
+attr_0:substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','BNK',1*1))
+
+Lin11.csv,LearnTime,0,GenTime,0,ExecTime,76,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>January 8<_END>	January
+<_START>2007 (September)<_END>	September
+attr_0:substr(value,indexOf(value,'ANY','WORD',1*1),indexOf(value,'WORD','ANY',1*1))
+
+lin12_unsolve.csv,LearnTime,0,GenTime,0,ExecTime,40,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.200000,Clf_acc,1.000000
+<_START>11152011<_END>	11/15/2011
+<_START>01252010<_END>	01/25/2010
+attr_0:'11'+'/'+'15'+'/'+'2011'
+
+lin12_unsolve.csv,LearnTime,0,GenTime,0,ExecTime,41,Exp_cnt,3,Constr_cnt,1,ParitionNum,2,Res_acc,0.400000,Clf_acc,1.000000
+<_START>11152011<_END>	11/15/2011
+<_START>01252010<_END>	01/25/2010
+<_START>12012011<_END>	12/01/2011
+attr_0:'11'+'/'+'15'+'/'+'2011'
+attr_1:'01'+'/'+'25'+'/'+'2010'
+
+lin12_unsolve.csv,LearnTime,1,GenTime,0,ExecTime,70,Exp_cnt,4,Constr_cnt,2,ParitionNum,3,Res_acc,0.600000,Clf_acc,1.000000
+<_START>11152011<_END>	11/15/2011
+<_START>01252010<_END>	01/25/2010
+<_START>12012011<_END>	12/01/2011
+<_START>01112011<_END>	01/11/2011
+attr_0:'11'+'/'+'15'+'/'+'2011'
+attr_1:'01'+'/'+'25'+'/'+'2010'
+attr_2:'12'+'/'+'01'+'/'+'2011'
+
+lin12_unsolve.csv,LearnTime,1,GenTime,0,ExecTime,70,Exp_cnt,5,Constr_cnt,3,ParitionNum,4,Res_acc,0.800000,Clf_acc,1.000000
+<_START>11152011<_END>	11/15/2011
+<_START>01252010<_END>	01/25/2010
+<_START>12012011<_END>	12/01/2011
+<_START>01112011<_END>	01/11/2011
+<_START>06222005<_END>	06/22/2005
+attr_0:'11'+'/'+'15'+'/'+'2011'
+attr_1:'01'+'/'+'25'+'/'+'2010'
+attr_2:'12'+'/'+'01'+'/'+'2011'
+attr_3:'01'+'/'+'11'+'/'+'2011'
+
+lin12_unsolve.csv,LearnTime,0,GenTime,0,ExecTime,70,Exp_cnt,5,Constr_cnt,4,ParitionNum,5,Res_acc,1.000000,Clf_acc,1.000000
+<_START>11152011<_END>	11/15/2011
+<_START>01252010<_END>	01/25/2010
+<_START>12012011<_END>	12/01/2011
+<_START>01112011<_END>	01/11/2011
+<_START>06222005<_END>	06/22/2005
+attr_0:'11'+'/'+'15'+'/'+'2011'
+attr_1:'01'+'/'+'25'+'/'+'2010'
+attr_4:'06'+'/'+'22'+'/'+'2005'
+attr_2:'12'+'/'+'01'+'/'+'2011'
+attr_3:'01'+'/'+'11'+'/'+'2011'
+
+lin13th.csv,LearnTime,0,GenTime,0,ExecTime,101,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.400000,Clf_acc,1.000000
+<_START>6/23/15<_END>	6.23.2015
+<_START>4/12/2023<_END>	4.12.2023
+attr_0:substr(value,indexOf(value,'START','NUM',1*1),indexOf(value,'NUM','\/',1*1))+'.'+substr(value,indexOf(value,'\/','NUM',1*1),indexOf(value,'NUM','\/',2*1))+'.'+'2015'
+
+lin13th.csv,LearnTime,0,GenTime,0,ExecTime,127,Exp_cnt,2,Constr_cnt,1,ParitionNum,2,Res_acc,1.000000,Clf_acc,1.000000
+<_START>6/23/15<_END>	6.23.2015
+<_START>4/12/2023<_END>	4.12.2023
+attr_0:substr(value,indexOf(value,'START','NUM',1*1),indexOf(value,'NUM','\/',1*1))+'.'+substr(value,indexOf(value,'\/','NUM',1*1),indexOf(value,'NUM','\/',2*1))+'.'+'2015'
+attr_1:substr(value,indexOf(value,'START','NUM',1*1),indexOf(value,'NUM','\/',1*1))+'.'+substr(value,indexOf(value,'\/','NUM',1*1),indexOf(value,'NUM','\/',2*1))+'.'+substr(value,indexOf(value,'\/','NUM',2*1),indexOf(value,'NUM','END',1*1))
+
+lin14.csv,LearnTime,0,GenTime,0,ExecTime,68,Exp_cnt,1,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>47 Foskett St. #2, Cambridge, MA 02144<_END>	Foskett
+attr_0:substr(value,indexOf(value,'BNK','WORD',1*1),indexOf(value,'WORD','BNK',1*1))
+
+lin15.csv,LearnTime,0,GenTime,0,ExecTime,48,Exp_cnt,1,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>47 Foskett St. #2, Cambridge, MA 02144<_END>	47
+attr_0:substr(value,indexOf(value,'START','NUM',1*1),indexOf(value,'NUM','BNK',1*1))
+
+lin16.csv,LearnTime,0,GenTime,0,ExecTime,50,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.800000,Clf_acc,1.000000
+<_START>47 Foskett St. #2, Cambridge, MA 02144<_END>	MA
+<_START>3113 Greenfield Ave., Los Angeles, CA 90034<_END>	CA
+attr_0:substr(value,indexOf(value,'BNK','WORD',-1*1),indexOf(value,'WORD','BNK',2*1))
+
+lin16.csv,LearnTime,0,GenTime,0,ExecTime,49,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>47 Foskett St. #2, Cambridge, MA 02144<_END>	MA
+<_START>3113 Greenfield Ave., Los Angeles, CA 90034<_END>	CA
+attr_0:substr(value,indexOf(value,'BNK','WORD',-1*1),indexOf(value,'WORD','BNK',-1*1))
+
+Lin2nd.csv,LearnTime,0,GenTime,0,ExecTime,52,Exp_cnt,1,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>paul<_END>	Paul.
+attr_0:Cap(substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','END',1*1)))+'.'
+
+Lin3rd.csv,LearnTime,0,GenTime,0,ExecTime,109,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.200000,Clf_acc,1.000000
+<_START>Arthur Joe Juan<_END>	A.J.J
+<_START>Jose Larry Scott<_END>	J.L.S
+attr_0:Firstletter(substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','BNK',1*1)))+'.'+Firstletter(substr(value,indexOf(value,'BNK','WORD',1*1),indexOf(value,'WORD','BNK',2*1)))+'.'+Firstletter(substr(value,indexOf(value,'BNK','WORD',1*1),indexOf(value,'WORD','BNK',2*1)))
+
+Lin3rd.csv,LearnTime,0,GenTime,0,ExecTime,89,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>Arthur Joe Juan<_END>	A.J.J
+<_START>Jose Larry Scott<_END>	J.L.S
+attr_0:Firstletter(substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','BNK',1*1)))+'.'+Firstletter(substr(value,indexOf(value,'BNK','WORD',1*1),indexOf(value,'WORD','BNK',2*1)))+'.'+Firstletter(substr(value,indexOf(value,'BNK','WORD',2*1),indexOf(value,'WORD','END',1*1)))
+
+Lin4th.csv,LearnTime,0,GenTime,0,ExecTime,61,Exp_cnt,1,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>ruby.clinton@mit.edu<_END>	Ruby Clinton
+attr_0:Cap(substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','\.',1*1)))+' '+Cap(substr(value,indexOf(value,'\.','WORD',1*1),indexOf(value,'WORD','@',1*1)))
+
+Lin5th.csv,LearnTime,0,GenTime,0,ExecTime,40,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.400000,Clf_acc,1.000000
+<_START>#include <sys.h><_END>	SYS
+<_START>#include <stdlib ><_END>	STDLIB
+attr_0:Uppercase(substr(value,indexOf(value,'<','WORD',1*1),indexOf(value,'WORD','\.',1*1)))
+
+Lin5th.csv,LearnTime,0,GenTime,0,ExecTime,34,Exp_cnt,3,Constr_cnt,0,ParitionNum,1,Res_acc,0.800000,Clf_acc,1.000000
+<_START>#include <sys.h><_END>	SYS
+<_START>#include <stdlib ><_END>	STDLIB
+<_START>#include < malloc.h><_END>	MALLOC
+attr_0:Uppercase(substr(value,indexOf(value,'<','WORD',1*1),indexOf(value,'WORD','ANY',2*1)))
+
+Lin5th.csv,LearnTime,0,GenTime,0,ExecTime,49,Exp_cnt,3,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>#include <sys.h><_END>	SYS
+<_START>#include <stdlib ><_END>	STDLIB
+<_START>#include < malloc.h><_END>	MALLOC
+attr_0:Uppercase(substr(value,indexOf(value,'ANY','WORD',2*1),indexOf(value,'WORD','ANY',2*1)))
+
+Lin6th.csv,LearnTime,0,GenTime,0,ExecTime,49,Exp_cnt,1,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>FRENCH WORCESTERSHIRE 5 Z<_END>	5 Z
+attr_0:substr(value,indexOf(value,'BNK','NUM',1*1),indexOf(value,'WORD','END',1*1))
+
+Lin7th.csv,LearnTime,0,GenTime,0,ExecTime,46,Exp_cnt,1,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>My name is Albert.<_END>	Albert
+attr_0:substr(value,indexOf(value,'BNK','WORD',3*1),indexOf(value,'WORD','\.',1*1))
+
+Lin8th_prob.csv,LearnTime,0,GenTime,0,ExecTime,62,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.200000,Clf_acc,1.000000
+<_START>MELVIN Julian<_END>	Melvin Julian
+<_START>StaNleY TRAVis<_END>	Stanley Travis
+attr_0:Cap(substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','BNK',1*1)))+substr(value,indexOf(value,'WORD','BNK',1*1),indexOf(value,'WORD','END',1*1))
+
+Lin8th_prob.csv,LearnTime,0,GenTime,0,ExecTime,70,Exp_cnt,2,Constr_cnt,1,ParitionNum,2,Res_acc,1.000000,Clf_acc,1.000000
+<_START>MELVIN Julian<_END>	Melvin Julian
+<_START>StaNleY TRAVis<_END>	Stanley Travis
+attr_0:Cap(substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','BNK',1*1)))+substr(value,indexOf(value,'WORD','BNK',1*1),indexOf(value,'WORD','END',1*1))
+attr_1:Cap(substr(value,indexOf(value,'START','WORD',1*1),indexOf(value,'WORD','BNK',1*1)))+substr(value,indexOf(value,'WORD','BNK',1*1),indexOf(value,'BNK','WORD',1*1))+Cap(substr(value,indexOf(value,'BNK','WORD',1*1),indexOf(value,'WORD','END',1*1)))
+
+Lin9th.csv,LearnTime,0,GenTime,0,ExecTime,49,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,0.800000,Clf_acc,1.000000
+<_START>47 Foskett St. #2, Cambridge, MA 02144<_END>	Cambridge
+<_START>43 St. Margaret St. #1, Dorchester, MA 02125<_END>	Dorchester
+attr_0:substr(value,indexOf(value,'BNK','WORD',3*1),indexOf(value,'WORD',',',1*1))
+
+Lin9th.csv,LearnTime,0,GenTime,0,ExecTime,35,Exp_cnt,2,Constr_cnt,0,ParitionNum,1,Res_acc,1.000000,Clf_acc,1.000000
+<_START>47 Foskett St. #2, Cambridge, MA 02144<_END>	Cambridge
+<_START>43 St. Margaret St. #1, Dorchester, MA 02125<_END>	Dorchester
+attr_0:substr(value,indexOf(value,',BNK','WORD',1*1),indexOf(value,'WORD',',',1*1))
+
+============Summary Information===========
+2015/02/24 10:38:24
+
+Lin10th.csv,T_learn,4.000000,avg_learn,4.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,131.000000,avg_exec,131.000000,exp,1.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+lin12_unsolve.csv,T_learn,2.000000,avg_learn,0.400000,T_gen,0.000000,avg_gen,0.000000,T_exec,291.000000,avg_exec,58.200000,exp,5.000000,constraint,10.000000,clfacc,1.000000, parNum, 5.000000
+Lin3rd.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,198.000000,avg_exec,99.000000,exp,2.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+Lin9th.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,84.000000,avg_exec,42.000000,exp,2.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+lin15.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,48.000000,avg_exec,48.000000,exp,1.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+lin14.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,68.000000,avg_exec,68.000000,exp,1.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+Lin5th.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,123.000000,avg_exec,41.000000,exp,3.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+Lin7th.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,46.000000,avg_exec,46.000000,exp,1.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+Lin4th.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,61.000000,avg_exec,61.000000,exp,1.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+lin13th.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,228.000000,avg_exec,114.000000,exp,2.000000,constraint,1.000000,clfacc,1.000000, parNum, 2.000000
+Lin6th.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,49.000000,avg_exec,49.000000,exp,1.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+Lin8th_prob.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,132.000000,avg_exec,66.000000,exp,2.000000,constraint,1.000000,clfacc,1.000000, parNum, 2.000000
+lin16.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,99.000000,avg_exec,49.500000,exp,2.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+Lin11.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,172.000000,avg_exec,86.000000,exp,2.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000
+Lin2nd.csv,T_learn,0.000000,avg_learn,0.000000,T_gen,0.000000,avg_gen,0.000000,T_exec,52.000000,avg_exec,52.000000,exp,1.000000,constraint,0.000000,clfacc,1.000000, parNum, 1.000000

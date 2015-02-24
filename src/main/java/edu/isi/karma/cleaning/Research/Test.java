@@ -775,7 +775,7 @@ public class Test {
 					ArrayList<double[]> accArrayList = new ArrayList<double[]>();
 					long stime = System.currentTimeMillis();
 					boolean overtime = true;
-					while (true && examples.size() <= 11) // repeat as no incorrect answer appears.
+					while (true) // repeat as no incorrect answer appears.
 					{
 						long checknumber = 1;
 						long iterAfterNoFatalError = 0;
