@@ -287,7 +287,11 @@ public class ProgSynthesis {
 		StopWatch stopWatch0 = new Log4JStopWatch("adaptive_main");
 		long t1 = System.currentTimeMillis();
 		StopWatch stopWatch = new Log4JStopWatch("adaptive_producePartition");
+		if(orgVector.size() == 20){
+			System.out.println("hello world");
+		}
 		Vector<Partition> par = this.adaptive_producePartition();
+		
 		stopWatch.stop();
 		StopWatch stopWatch1 = new Log4JStopWatch("adaptive_produceProgram");
 		Collection<ProgramRule> cpr = this.adaptive_produceProgram(par);

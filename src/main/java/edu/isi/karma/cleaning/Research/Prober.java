@@ -60,10 +60,10 @@ public class Prober {
 			res += String.format("%s   %s\n", x[0], x[1]);
 		}
 		
-		for(String k:dics.keySet())
+		/*for(String k:dics.keySet())
 		{
 			System.out.println("dict: "+String.format("%s, %s", k, dics.get(k)));
-		}
+		}*/
 		for(Patcher p:errNodes)
 		{
 			System.out.println("old Exp: \n"+res);

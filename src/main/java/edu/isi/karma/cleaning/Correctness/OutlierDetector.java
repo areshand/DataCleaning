@@ -3,42 +3,60 @@ package edu.isi.karma.cleaning.Correctness;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.junit.Test;
+
 import libsvm.svm_parameter;
+import edu.isi.karma.cleaning.DataPreProcessor;
 import edu.isi.karma.cleaning.features.RecordClassifier;
 import edu.isi.karma.cleaning.features.RecordFeatureSet;
 
 public class OutlierDetector {
 	RecordClassifier clf;
-	public OutlierDetector()
-	{
-		RecordFeatureSet rfs1 = new RecordFeatureSet();
-		clf = new RecordClassifier(rfs1, svm_parameter.ONE_CLASS);
+	DataPreProcessor dpp;
+	RecordFeatureSet rfs = new RecordFeatureSet();
+	public OutlierDetector() {
+		clf = new RecordClassifier(rfs, svm_parameter.ONE_CLASS);
 	}
-	
-	public void train(ArrayList<String> tdata)
-	{
-		for(String line:tdata)
-		{
-			clf.addTrainingData(line, "1");
+
+	public void train(ArrayList<String> tdata) {
+		dpp = new DataPreProcessor(tdata);
+		dpp.run();
+		
+		try {
+			for (String text : dpp.data) {
+				double[] values = dpp.getNormalizedreScaledVector(text); 
+				System.out.println("values: "+Arrays.toString(values));
+				clf.addTrainingData(text, values, "c0");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-		clf.learnClassifer();
 	}
-	public String getLabel(String input)
-	{
+	public void learnDetector(){
+		rfs.updateVocabulary(dpp.getAllFeatures());
+		clf.learnClassifer();		
+	}
+
+	public boolean isOutlier(String input) {
 		String label = clf.getLabel(input);
-		return label;
+		System.out.println(label);
+		if (label.compareTo("c0") != 0) {
+			return true;
+		}
+		return false;
 	}
-	public static void main(String[] args)
-	{
+
+	@Test
+	public void test() {
 		OutlierDetector outDet = new OutlierDetector();
-		String[] dat = {"A", "AA","B", "BB"};
-		String[] tst = {"B", "b", "AAAAAAAAAAAA","."};
+		String[] dat = { "A", "AA", "B", "BB" };
+		String[] tst = { "A", "AA", "B", "BB", "AAAAAAAAAAAA", "." };
 		ArrayList<String> data = new ArrayList<String>(Arrays.asList(dat));
 		outDet.train(data);
-		for(String l:tst)
-		{
-			String out = outDet.getLabel(l);
-			System.out.println(l+": "+out);
+		outDet.learnDetector();
+		for (String l : tst) {
+			if (outDet.isOutlier(l))
+				System.out.println(l + " is an outlier");
 		}
 	}
 

@@ -236,4 +236,10 @@ public class Program implements GrammarTreeNode {
 	public String getProgram() {
 		return this.program;
 	}
+
+	@Override
+	public ArrayList<String> genAtomicPrograms() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

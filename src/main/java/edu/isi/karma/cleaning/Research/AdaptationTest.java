@@ -15,8 +15,7 @@ public class AdaptationTest {
 		//preload all libraries 
 		//Test.test4("/Users/bowu/Research/testdata/TestSingleFile");
 		//start experiment
-		Test.test4("/Users/bowu/Research/testdata/TestSingleFile");
-		Test.test3("/Users/bowu/Research/testdata/TestSingleFile");
+		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
 		notification.notify(true,"NewExpr");
 	}
 }

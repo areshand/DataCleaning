@@ -4,15 +4,19 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Vector;
 
 import org.junit.Test;
 
+import edu.isi.karma.cleaning.DataPreProcessor;
 import edu.isi.karma.cleaning.ExampleTraces;
 import edu.isi.karma.cleaning.GrammarTreeNode;
+import edu.isi.karma.cleaning.Messager;
 import edu.isi.karma.cleaning.ParseTreeNode;
 import edu.isi.karma.cleaning.Partition;
+import edu.isi.karma.cleaning.ProgSynthesis;
 import edu.isi.karma.cleaning.ProgramAdaptator;
 import edu.isi.karma.cleaning.ProgramParser;
 import edu.isi.karma.cleaning.ProgramRule;
@@ -25,6 +29,52 @@ import edu.isi.karma.cleaning.UtilTools;
 
 public class ProgramAdaptation {
 
+	public String test_adaptive_seq(ArrayList<String[]> exps) {
+		String timeres = "";
+		HashMap<String, String[]> xHashMap = new HashMap<String, String[]>();
+		int index = 0;
+		Vector<String> vtmp = new Vector<String>();
+		Vector<String[]> examples = new Vector<String[]>();
+		for (String[] pair : exps) {
+			if (pair == null || pair.length <= 1)
+				break;
+			String[] line = { pair[0], pair[1], "", "", "wrong" };
+			vtmp.add(pair[0]);
+			xHashMap.put(index + "", line);
+			index++;
+		}
+		DataPreProcessor dpp = new DataPreProcessor(vtmp);
+		dpp.run();
+		Messager msger = new Messager();
+		int i = 0;
+		while (i<exps.size()) // repeat as no incorrect answer appears.
+		{
+			String[] tmt = { "<_START>" + exps.get(i)[0] + "<_END>", exps.get(i)[1] };
+			examples.add(tmt);
+			xHashMap = new HashMap<String, String[]>();
+			ProgSynthesis psProgSynthesis = new ProgSynthesis();
+			psProgSynthesis.inite(examples, dpp, msger);
+			Vector<ProgramRule> pls = new Vector<ProgramRule>();
+			long t1 = System.currentTimeMillis();
+			Collection<ProgramRule> ps = psProgSynthesis.adaptive_main();
+			long span = System.currentTimeMillis()-t1;
+			timeres += span+",";
+			// collect history contraints
+			msger.updateCM_Constr(psProgSynthesis.partiCluster.getConstraints());
+			msger.updateWeights(psProgSynthesis.partiCluster.weights);
+			i++;
+			// constraints.addAll();
+			if (ps != null) {
+				pls.addAll(ps);
+				System.out.println("program: "+ps);
+			} else {
+				System.out.println("Cannot find any rule");
+			}
+			if (pls.size() == 0)
+				break;
+		}
+		return timeres;
+	}
 	@Test
 	public void testScalability()
 	{
@@ -43,7 +93,7 @@ public class ProgramAdaptation {
 		exps.add(e5);
 		exps.add(e6);
 		exps.add(e7);
-		edu.isi.karma.cleaning.Research.Test.test_adaptive_seq(exps);
+		test_adaptive_seq(exps);
 	}
 	
 	public void conceptValidation()
@@ -92,7 +142,7 @@ public class ProgramAdaptation {
 		}	
 	}
 	
-	//@Test
+	@Test
 	public void testTrace() {
 		// adding examples
 		String[] mt = { "HelloHorld", "Horld" };

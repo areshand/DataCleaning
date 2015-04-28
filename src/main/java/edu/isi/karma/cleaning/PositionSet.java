@@ -86,4 +86,10 @@ public class PositionSet implements GrammarTreeNode {
 		return null;
 	}
 
+	@Override
+	public ArrayList<String> genAtomicPrograms() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -25,15 +25,29 @@ public class ProgramAdaptator {
 		if(examples.size() == 1 || keys.size() == 0)
 		{
 			ExampleTraces tool = new ExampleTraces();
-			Traces t1 = tool.createTrace(examples.get(0));
-			String prog = t1.toProgram();
 			ArrayList<String[]> tmpKey = new ArrayList<String[]>();
 			tmpKey.add(examples.get(0));
 			String tK = UtilTools.createkey(tmpKey);
-			exp2Space.put(tK, t1);
-			exp2program.put(tK, prog);
+			
+			Traces t1 = null;
+			String prog = null; 
+			if(exp2Space.containsKey(tK)){
+				t1 = getProgramSpace(tK, exp2Space);
+			}
+			else{
+				t1 = tool.createTrace(examples.get(0));
+				exp2Space.put(tK, t1);
+
+			}
+			if(exp2program.containsKey(tK)){
+				prog = getProgram(tK, exp2program);
+			}
+			else{
+				prog = t1.toProgram();
+				exp2program.put(tK, prog);
+			}			
 			keys.add(0);
-			//return prog;
+			return prog;
 		}
 		ArrayList<String[]> inExps = new ArrayList<String[]>();
 		for (Integer i : keys) {
@@ -61,13 +75,28 @@ public class ProgramAdaptator {
 
 	public String adapteOneExample(Traces wholespace, String[] exp,
 			String program,ArrayList<String[]> inExps,HashMap<String, Traces> exp2Space, HashMap<String, String> exp2program) {
+		String evres = "";
+		ProgramRule exec = new ProgramRule(program);
+		evres = exec.transform(exp[0]);
+		ArrayList<String[]> exps = new ArrayList<String[]>();
+		exps.add(exp);
+		String skey = UtilTools.createkey(exps);		
+		HashMap<String, ArrayList<String>> prog2Evals = new HashMap<String,ArrayList<String>>();
+		HashMap<String, String> prog2Nevals = new HashMap<String,String>();
+		if(evres.compareTo(exp[1]) == 0)
+		{
+			Traces nTraces = wholespace;
+			ArrayList<String[]> expr = new ArrayList<String[]>();
+			expr.add(exp);
+			expr.addAll(inExps);
+			String nKey = formKey(expr,new ArrayList<Integer>(), false);				
+			exp2program.put(nKey, program);
+			exp2Space.put(nKey, nTraces);
+			return program;
+		}
 		ProgramParser programParser = new ProgramParser();
 		ParseTreeNode ptree = programParser.parse(program);
-		// add unknown examples incrementally
-		String evres = "";
-		evres = ptree.eval(exp[0]);
-		ArrayList<String[]> exps = new ArrayList<String[]>();
-		String skey = UtilTools.createkey(exps);
+		ptree.eval(exp[0]);
 		Traces tIn = null;
 		if(exp2Space.containsKey(skey))
 		{
@@ -76,19 +105,7 @@ public class ProgramAdaptator {
 		else
 		{
 			tIn = createSingleTrace(exp); 
-		}
-		HashMap<String, ArrayList<String>> prog2Evals = new HashMap<String,ArrayList<String>>();
-		HashMap<String, String> prog2Nevals = new HashMap<String,String>();
-		if(evres.compareTo(exp[1]) == 0)
-		{
-			Traces nTraces = wholespace.mergewith(tIn);
-			ArrayList<String[]> expr = new ArrayList<String[]>();
-			expr.add(exp);
-			expr.addAll(inExps);
-			String nKey = formKey(expr,new ArrayList<Integer>(), false);				
-			exp2program.put(nKey, program);
-			exp2Space.put(nKey, nTraces);
-			return program;
+			exp2Space.put(skey, tIn);
 		}
 		ArrayList<ArrayList<Patcher>> tree_refers = createCandidates(ptree, tIn);
 		//prepare the necessary information 
@@ -118,7 +135,6 @@ public class ProgramAdaptator {
 			String tmpSeg= tpp.transform(exp[0]);			
 			prog2Nevals.put(node.value, tmpSeg);
 		}
-		//nothing to change	
 		for (ArrayList<Patcher> tTree : tree_refers) {
 			Traces cwspace = wholespace;// clone the original space
 			ArrayList<Patcher> errNodes = align(tTree, cwspace, inExps,prog2Evals,prog2Nevals);
@@ -140,7 +156,6 @@ public class ProgramAdaptator {
 			}
 			Prober.tracePatchers(program, errNodes, inExps,exp,valid,exp2program);
 			if (valid) {
-				// NEED TO UPDATE THE SUBSPACE RATHER THAN THE WHOLE ONE!!!
 				Traces nTraces = cwspace.mergewith(tIn);
 				ArrayList<String[]> expr = new ArrayList<String[]>();
 				expr.add(exp);

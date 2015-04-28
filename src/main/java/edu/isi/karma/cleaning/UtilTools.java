@@ -182,7 +182,57 @@ public class UtilTools {
 		}
 		return true;
 	}
-
+	public static HashSet<String> getPositions(String org){
+		HashSet<String> ret = new HashSet<String>();
+		int segmentCnt = 0;
+		Vector<int[]> allUpdates = new Vector<int[]>();
+		String pat = "((?<=\\{_L\\})|(?=\\{_L\\}))";
+		String pat1 = "((?<=\\{_S\\})|(?=\\{_S\\}))";
+		String[] st = org.split(pat);
+		boolean inloop = false;
+		for (String token : st) {
+			if (token.compareTo("{_L}") == 0 && !inloop) {
+				inloop = true;
+				continue;
+			}
+			if (token.compareTo("{_L}") == 0 && inloop) {
+				inloop = false;
+				continue;
+			}
+			String[] st1 = token.split(pat1);
+			for (String str : st1) {
+				if (str.compareTo("{_S}") == 0 || str.compareTo("{_S}") == 0) {
+					continue;
+				}
+				if (str.indexOf("{_C}") != -1) {
+					String[] pos = str.split("\\{_C\\}");
+					int[] poses = { Integer.valueOf(pos[0]),
+							Integer.valueOf(pos[1]), segmentCnt };
+					boolean findPos = false;
+					for (int i = 0; i < allUpdates.size(); i++) {
+						int[] cur = allUpdates.get(i);
+						if (poses[0] <= cur[0]) {
+							findPos = true;
+							allUpdates.add(i, poses);
+							break; // avoid infinite adding
+						}
+					}
+					if (!findPos) {
+						allUpdates.add(poses);
+					}
+				}
+			}
+		}
+		for (int[] update : allUpdates) {
+			if(!ret.contains(update[0]+"")){
+				ret.add(update[0]+"");
+			}
+			if(!ret.contains(update[1]+"")){
+				ret.add(update[1]+"");
+			}
+		}
+		return ret;
+	}
 	public static void StringColorCode(String org, String res,
 			HashMap<String, String> dict) throws Exception {
 		int segmentCnt = 0;
@@ -224,8 +274,9 @@ public class UtilTools {
 					if (!findPos) {
 						allUpdates.add(poses);
 					}
-					String tarseg = org.substring(Integer.valueOf(pos[0]),
+					String tmp = org.substring(Integer.valueOf(pos[0]),
 							Integer.valueOf(pos[1]));
+					String tarseg = pos.length == 3 ? pos[2] : tmp;
 
 					if (inloop) {
 

@@ -1,5 +1,6 @@
 package edu.isi.karma.cleaning;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -451,5 +452,23 @@ public class Position implements GrammarTreeNode {
 	@Override
 	public String getProgram() {
 		return this.program;
+	}
+
+	private final int stopthreshold = 100;
+	@Override
+	public ArrayList<String> genAtomicPrograms() {
+		ArrayList<String> ret = new ArrayList<String>();
+		int cnt = curState;
+		while(cnt < stopthreshold){
+			String rule =  this.VerifySpace(cnt);
+			if(rule.compareTo("null") == 0){
+				break;
+			}
+			else{
+				ret.add(rule);
+			}
+			cnt ++;
+		}
+		return ret;
 	}
 }

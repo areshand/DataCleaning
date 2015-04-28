@@ -5,7 +5,6 @@ import java.util.Vector;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
-
 public class PartitionClassifier {
 	private PyObject interpreterClass;
 	public String clssettingString = "";
@@ -33,23 +32,28 @@ public class PartitionClassifier {
 		interpreter.exec("from IDCTClassifier import *");
 		interpreterClass = interpreter.get("IDCTClassifier");
 	}
-	public PartitionClassifierType create2(Vector<Partition> pars,PartitionClassifierType ele,DataPreProcessor dpp)
-	{
+
+	public PartitionClassifierType create2(Vector<Partition> pars,
+			PartitionClassifierType ele, DataPreProcessor dpp) {
 		ele.init();
-		for(int i = 0; i<pars.size(); i++)
-		{
-			Partition partition = pars.get(i);
-			for (int j = 0; j < partition.orgNodes.size(); j++) {
-				String s = UtilTools.print(partition.orgNodes.get(j));
-				String label = partition.label;
-				ele.addTrainingData(s, label);
+		try {
+			for (int i = 0; i < pars.size(); i++) {
+				Partition partition = pars.get(i);
+				for (int j = 0; j < partition.orgNodes.size(); j++) {
+					String s = UtilTools.print(partition.orgNodes.get(j));
+					String label = partition.label;
+					double[] values = dpp.getNormalizedreScaledVector(s);
+					ele.addTrainingData(s, values, label);
+				}
+				for (int j = 0; j < partition.orgUnlabeledData.size(); j++) {
+					String label = partition.label;
+					String s = partition.orgUnlabeledData.get(j);
+					double[] values = dpp.getNormalizedreScaledVector(s);
+					ele.addTrainingData(s, values, label);
+				}
 			}
-			for(int j = 0; j < partition.orgUnlabeledData.size(); j++)
-			{
-				String label = partition.label;
-				String s = partition.orgUnlabeledData.get(j);
-				ele.addTrainingData(s, label);
-			}
+		} catch (Exception ex) {
+
 		}
 		this.clssettingString = ele.learnClassifer();
 		return ele;

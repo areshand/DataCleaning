@@ -65,6 +65,9 @@ public class RecordFeatureSet {
 		}
 		xStrings = xList.toArray(new String[xList.size()]);
 	}
+	public void updateVocabulary(String[] vocb){
+		xStrings = vocb;
+	}
 	public void addVocabulary(String[] vocb)
 	{
 		if(vocb == null)

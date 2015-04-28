@@ -27,6 +27,9 @@ public class DataPreProcessor {
 	{
 		return data2Vector;
 	}
+	public String[] getAllFeatures(){
+		return rfs.xStrings;
+	}
 	public void run() {
 		Vector<String> toks = buildDict(data);
 		// vectorize String
@@ -44,6 +47,15 @@ public class DataPreProcessor {
 		// rescale each feature
 		resacle(xHashMap);
 		this.data2Vector = xHashMap;
+	}
+	public double[] getNormalizedreScaledVector(String data) throws Exception{
+		if(data2Vector.containsKey(data)){
+			return data2Vector.get(data);
+		}
+		else{
+			throw new Exception(data+" has not been normalized and rescaled");
+		}
+		
 	}
 	public void resacle(HashMap<String, double[]> xHashMap)
 	{
@@ -153,7 +165,7 @@ public class DataPreProcessor {
 			}
 		}
 		// prune infrequent terms
-		int thresdhold = (int) (data.size() * 0.005);
+		int thresdhold = (int) (data.size() * 0.05);
 		Iterator<Entry<String, Integer>> iter = mapHashSet.entrySet()
 				.iterator();
 		while (iter.hasNext()) {

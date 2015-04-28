@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.commons.math.optimization.linear.LinearConstraint;
-import org.apache.commons.math.optimization.linear.LinearObjectiveFunction;
 
 import edu.isi.karma.cleaning.features.Feature;
 
@@ -22,7 +20,7 @@ public class ExampleCluster {
 	public ProgSynthesis pSynthesis; // data
 	HashMap<String, Vector<String>> uorgclusters = new HashMap<String, Vector<String>>();
 	HashMap<String, double[]> string2Vector = new HashMap<String, double[]>();
-	int unlabelDataAmount = 10;
+	int unlabelDataAmount = 5;
 	double assignThreshold = 0.1;
 	public int featuresize = 0;
 	public int failedCnt = 0;
@@ -111,7 +109,7 @@ public class ExampleCluster {
 
 	public void init() {
 		if (option == method.DP || option == method.DPIC) {
-			this.unlabelDataAmount = 10;
+			this.unlabelDataAmount = 5;
 		} else {
 			this.unlabelDataAmount = 0;
 		}
@@ -139,9 +137,6 @@ public class ExampleCluster {
 			double mindist = Double.MAX_VALUE;
 			int x_ind = -1;
 			int y_ind = -1;
-			/* print the partitioning information* */
-			// ProgTracker.printPartition(pars);
-			// ProgTracker.printConstraints(constraints);
 			/***/
 			for (int i = 0; i < pars.size(); i++) {
 				for (int j = i + 1; j < pars.size(); j++) {
@@ -422,22 +417,6 @@ public class ExampleCluster {
 		return res;
 	}
 
-	public LinearObjectiveFunction formulateObjectiveFunction() {
-		return null;
-	}
-
-	public Collection<LinearConstraint> formulateContraints() {
-		Collection<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
-		// A > 0
-		double[] x1 = new double[featuresize + 2];
-		for (int i = 0; i < x1.length - 2; i++) {
-			x1[i] = 1;
-		}
-		x1[featuresize] = 0;
-		x1[featuresize + 1] = 0;
-		return constraints;
-	}
-
 	// input with current contraints
 	public void updateDistanceMetric(Vector<Partition> pars) {
 		if (option == method.DP || option == method.DPIC) {
@@ -610,6 +589,8 @@ public class ExampleCluster {
 		}
 		
 		String key = p.getHashKey();
+		if(pSynthesis.msGer.exp2program.containsKey(key))
+			return true;
 		if (legalParitions.containsKey(key)) {
 			return legalParitions.get(key);
 		}
