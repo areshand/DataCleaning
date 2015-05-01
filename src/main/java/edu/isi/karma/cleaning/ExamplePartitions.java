@@ -3,45 +3,41 @@ package edu.isi.karma.cleaning;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Vector;
-/*
- *store the traces for all the examples
- * */
-/*
- *store the traces for all the examples
- * */
-public class ExampleTraces {
-	public HashMap<String, Traces> expTraces = new HashMap<String, Traces>();
-	public ExampleTraces()
+
+public class ExamplePartitions {
+	public HashMap<String, Partition> expPartitions = new HashMap<String, Partition>();
+	public ExamplePartitions()
 	{
 		
 	}
-	public Traces createTrace(String[] example)
+	public Partition createPartition(String[] example)
 	{
-		Vector<TNode> orgNodes = new Vector<TNode>();
-		Vector<TNode> tarNodes = new Vector<TNode>();
+		Vector<Vector<TNode>> orgNodes = new Vector<Vector<TNode>>();
+		Vector<Vector<TNode>> tarNodes = new Vector<Vector<TNode>>();
 		Ruler ruler = new Ruler();
 		ruler.setNewInput("<_START>"+example[0]+"<_END>");
-		orgNodes = ruler.vec;
+		orgNodes.add(ruler.vec);
 		ruler.setNewInput(example[1]);
-		tarNodes = ruler.vec;
-		Traces t = new Traces(orgNodes, tarNodes);
-		this.addTrace(example, t);
+		tarNodes.add(ruler.vec);
+		
+		Partition t = new Partition(orgNodes, tarNodes);
+		this.addPartition(example, t);
 		return t;
 	}
-	public void addTrace(String[] example, Traces t)
+	public void addPartition(String[] example, Partition p)
 	{
 		String key = String.format("%s|%s", example[0],example[1]);
-		expTraces.put(key, t);
+		expPartitions.put(key, p);
 	}
-	public Traces getTrace(String[] example)
+	public Partition getPartition(String[] example)
 	{
 		String key = String.format("%s|%s", example[0],example[1]);
-		return expTraces.get(key);
+		return expPartitions.get(key);
 	}
 	public Vector<Vector<Segment>> getCurrentSegments(String[] example)
 	{
 		Vector<Vector<Segment>> res = new Vector<Vector<Segment>>();
-		Traces t = this.getTrace(example);
+		Traces t = this.getPartition(example).trace;
 		Collection<Template> x = t.traceline.values();
 		for(Template tmp:x)
 		{

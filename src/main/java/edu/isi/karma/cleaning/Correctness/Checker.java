@@ -31,7 +31,8 @@ public class Checker {
 	}
 	public void train(ArrayList<String[]> postive, ArrayList<String[]> negative)
 	{
-		clf.init();
+		String[] v = {};
+		clf.init(v);
 		for(String[] pos:postive)
 		{
 			String tmp = binds(pos);

@@ -76,8 +76,7 @@ public class Test {
 		// statistics
 		// list all the csv file under the dir
 		for (File f : allfiles) {
-			if (f.getName().indexOf(".csv") != -1
-					&& f.getName().indexOf(".csv") == (f.getName().length() - 4)) {
+			if (f.getName().indexOf(".csv") != -1 && f.getName().indexOf(".csv") == (f.getName().length() - 4)) {
 				double minS = Double.MAX_VALUE;
 				double bestRatio = 0.0;
 				for (int i = 0; i < r.length; i++) {
@@ -88,12 +87,10 @@ public class Test {
 						bestRatio = r[i];
 
 					}
-					String runinfo = String.format("%s: ratio: %f, value:%f\n",
-							f.getName(), r[i], s);
+					String runinfo = String.format("%s: ratio: %f, value:%f\n", f.getName(), r[i], s);
 					runningInfo.add(runinfo);
 				}
-				String parms = String.format("%s: ratio: %f, BestVal:%f",
-						f.getName(), bestRatio, minS);
+				String parms = String.format("%s: ratio: %f, BestVal:%f", f.getName(), bestRatio, minS);
 				selectParams.add(parms);
 			}
 		}
@@ -107,8 +104,7 @@ public class Test {
 			Vector<String[]> examples = new Vector<String[]>();
 			Vector<String[]> addExamples = new Vector<String[]>();
 			Vector<String[]> entries = new Vector<String[]>();
-			if (f.getName().indexOf(".csv") != -1
-					&& f.getName().indexOf(".csv") == (f.getName().length() - 4)) {
+			if (f.getName().indexOf(".csv") != -1 && f.getName().indexOf(".csv") == (f.getName().length() - 4)) {
 				// MyLogger.logsth("========"+f.getName()+"============\n");
 				HashMap<String, String[]> xHashMap = new HashMap<String, String[]>();
 				@SuppressWarnings("resource")
@@ -138,8 +134,7 @@ public class Test {
 				ExampleSelection.firsttime = true;
 				expsel.inite(xHashMap, null);
 				int target = Integer.parseInt(expsel.Choose());
-				String[] mt = { "<_START>" + entries.get(target)[0] + "<_END>",
-						entries.get(target)[1] };
+				String[] mt = { "<_START>" + entries.get(target)[0] + "<_END>", entries.get(target)[1] };
 				examples.add(mt);
 				ExampleSelection.firsttime = false;
 				// accuracy record code
@@ -164,8 +159,7 @@ public class Test {
 					Vector<ProgramRule> pls = new Vector<ProgramRule>();
 					Collection<ProgramRule> ps = psProgSynthesis.run_main();
 					// collect history contraints
-					msger.updateCM_Constr(psProgSynthesis.partiCluster
-							.getConstraints());
+					msger.updateCM_Constr(psProgSynthesis.partiCluster.getConstraints());
 					msger.updateWeights(psProgSynthesis.partiCluster.weights);
 					// constraints.addAll();
 					if (ps != null) {
@@ -186,16 +180,12 @@ public class Test {
 						// System.out.println(script);
 						String res = "";
 						for (int j = 0; j < entries.size(); j++) {
-							InterpreterType worker = script
-									.getRuleForValue(entries.get(j)[0]);
-							String classlabel = script.getClassForValue(entries
-									.get(j)[0]);
-							String tmps = worker
-									.execute_debug(entries.get(j)[0]);
+							InterpreterType worker = script.getRuleForValue(entries.get(j)[0]);
+							String classlabel = script.getClassForValue(entries.get(j)[0]);
+							String tmps = worker.execute_debug(entries.get(j)[0]);
 							HashMap<String, String> dict = new HashMap<String, String>();
 							dict.put("class", classlabel);
-							UtilTools.StringColorCode(entries.get(j)[0], tmps,
-									dict);
+							UtilTools.StringColorCode(entries.get(j)[0], tmps, dict);
 							String s = dict.get("Tar");
 							if (Test.isExample(entries.get(j)[0], examples)) {
 								s = entries.get(j)[1];
@@ -213,34 +203,27 @@ public class Test {
 							boolean existres = false;
 							for (InterpreterType w : script.rules.values()) {
 								String xtmp = w.execute(entries.get(j)[0]);
-								if (xtmp != null
-										&& xtmp.length() > 0
-										&& xtmp.compareTo(entries.get(j)[1]) == 0) {
+								if (xtmp != null && xtmp.length() > 0 && xtmp.compareTo(entries.get(j)[1]) == 0) {
 									existres = true;
 									break;
 								}
 							}
 							if (existres) {
 								clf_acc_total_cnt++;
-								if (s == null || s.length() == 0
-										|| s.compareTo(entries.get(j)[1]) != 0) {
+								if (s == null || s.length() == 0 || s.compareTo(entries.get(j)[1]) != 0) {
 									clf_acc_error_cnt++;
 								}
 							}
 							//
 							if (s == null || s.length() == 0) {
-								String[] ts = {
-										"<_START>" + entries.get(j)[0]
-												+ "<_END>", "", tmps,
-										classlabel, "wrong" };
+								String[] ts = { "<_START>" + entries.get(j)[0] + "<_END>", "", tmps, classlabel, "wrong" };
 								xHashMap.put(j + "", ts);
 								wexam = ts;
 								checknumber++;
 							}
 							boolean isfind = false;
 							for (String[] exppair : examples) {
-								if (exppair[0].compareTo("<_START>"
-										+ dict.get("Org") + "<_END>") == 0) {
+								if (exppair[0].compareTo("<_START>" + dict.get("Org") + "<_END>") == 0) {
 									String[] exp = { dict.get("Org"), tmps };
 									if (!expFeData.containsKey(classlabel)) {
 										Vector<String[]> vstr = new Vector<String[]>();
@@ -253,8 +236,7 @@ public class Test {
 								}
 							}
 							for (String[] tmpx : addExamples) {
-								if (tmpx[0].compareTo(dict.get("Org")) == 0
-										&& tmpx[1].compareTo(dict.get("Tar")) == 0) {
+								if (tmpx[0].compareTo(dict.get("Org")) == 0 && tmpx[1].compareTo(dict.get("Tar")) == 0) {
 									String[] exp = { dict.get("Org"), tmps };
 									if (!expFeData.containsKey(classlabel)) {
 										Vector<String[]> vstr = new Vector<String[]>();
@@ -267,10 +249,7 @@ public class Test {
 								}
 							}
 							if (!isfind) {
-								String[] ts = {
-										"<_START>" + entries.get(j)[0]
-												+ "<_END>", s, tmps,
-										classlabel, "right" };
+								String[] ts = { "<_START>" + entries.get(j)[0] + "<_END>", s, tmps, classlabel, "right" };
 								if (s.compareTo(entries.get(j)[1]) != 0) {
 									ErrorCnt++;
 									wexam = ts;
@@ -280,18 +259,14 @@ public class Test {
 							}
 						}
 
-						if (wexam == null
-								|| (entries.size() - ErrorCnt) * 1.0
-										/ entries.size() == 1.0) {
+						if (wexam == null || (entries.size() - ErrorCnt) * 1.0 / entries.size() == 1.0) {
 							wexam = null;
 							break;
 						}
 						resultString.add(res);
 					}
-					double resultacc = (entries.size() - ErrorCnt) * 1.0
-							/ entries.size();
-					double clf_acc = 1 - clf_acc_error_cnt * 1.0
-							/ clf_acc_total_cnt;
+					double resultacc = (entries.size() - ErrorCnt) * 1.0 / entries.size();
+					double clf_acc = 1 - clf_acc_error_cnt * 1.0 / clf_acc_total_cnt;
 					double[] accarray = { resultacc, clf_acc };
 					// use uData to refiner the result
 					System.out.println("" + psProgSynthesis.myprog.toString());
@@ -306,12 +281,10 @@ public class Test {
 							expsel.inite(xHashMap, expFeData);
 							int e = Integer.parseInt(expsel.Choose());
 							// /
-							System.out.println("Recommand Example: "
-									+ Arrays.toString(xHashMap.get("" + e)));
+							System.out.println("Recommand Example: " + Arrays.toString(xHashMap.get("" + e)));
 							// /
 							if (xHashMap.get("" + e)[4].compareTo("right") != 0) {
-								wexp[0] = "<_START>" + entries.get(e)[0]
-										+ "<_END>";
+								wexp[0] = "<_START>" + entries.get(e)[0] + "<_END>";
 								wexp[1] = entries.get(e)[1];
 								if (expsel.isDetectingQuestionableRecord) {
 									iterAfterNoFatalError++;
@@ -357,12 +330,10 @@ public class Test {
 			Vector<String[]> addExamples = new Vector<String[]>();
 			Vector<String[]> entries = new Vector<String[]>();
 			try {
-				if (f.getName().indexOf(".csv") != -1
-						&& f.getName().indexOf(".csv") == (f.getName().length() - 4)) {
+				if (f.getName().indexOf(".csv") != -1 && f.getName().indexOf(".csv") == (f.getName().length() - 4)) {
 					HashMap<String, String[]> xHashMap = new HashMap<String, String[]>();
 					@SuppressWarnings("resource")
-					CSVReader cr = new CSVReader(new FileReader(f), ',', '"',
-							'\0');
+					CSVReader cr = new CSVReader(new FileReader(f), ',', '"', '\0');
 					String[] pair;
 					int index = 0;
 					Vector<String> vtmp = new Vector<String>();
@@ -387,9 +358,7 @@ public class Test {
 					ExampleSelection.firsttime = true;
 					expsel.inite(xHashMap, null);
 					int target = Integer.parseInt(expsel.Choose());
-					String[] mt = {
-							"<_START>" + entries.get(target)[0] + "<_END>",
-							entries.get(target)[1] };
+					String[] mt = { "<_START>" + entries.get(target)[0] + "<_END>", entries.get(target)[1] };
 					examples.add(mt);
 					ExampleSelection.firsttime = false;
 					// accuracy record code
@@ -407,19 +376,17 @@ public class Test {
 						}
 						psProgSynthesis.inite(examples, dpp, msger);
 						Vector<ProgramRule> pls = new Vector<ProgramRule>();
-						
+
 						Collection<ProgramRule> ps = null;
-						if(!adaptive){
-								ps = psProgSynthesis.run_main();
-						}
-						else{
+						if (!adaptive) {
+							ps = psProgSynthesis.run_main();
+						} else {
 							ps = psProgSynthesis.adaptive_main();
 						}
 						// collect history contraints
-						msger.updateCM_Constr(psProgSynthesis.partiCluster
-								.getConstraints());
+						msger.updateCM_Constr(psProgSynthesis.partiCluster.getConstraints());
 						msger.updateWeights(psProgSynthesis.partiCluster.weights);
-						
+
 						// constraints.addAll();
 						if (ps != null) {
 							pls.addAll(ps);
@@ -438,17 +405,13 @@ public class Test {
 							// System.out.println(script);
 							String res = "";
 							for (int j = 0; j < entries.size(); j++) {
-								InterpreterType worker = script
-										.getRuleForValue(entries.get(j)[0]);
-								String classlabel = script
-										.getClassForValue(entries.get(j)[0]);
-								String tmps = worker.execute_debug(entries
-										.get(j)[0]);
-								
+								InterpreterType worker = script.getRuleForValue(entries.get(j)[0]);
+								String classlabel = script.getClassForValue(entries.get(j)[0]);
+								String tmps = worker.execute_debug(entries.get(j)[0]);
+
 								HashMap<String, String> dict = new HashMap<String, String>();
 								dict.put("class", classlabel);
-								UtilTools.StringColorCode(entries.get(j)[0],
-										tmps, dict);
+								UtilTools.StringColorCode(entries.get(j)[0], tmps, dict);
 								String s = worker.execute(entries.get(j)[0]);
 								dict.put("Tar", s);
 								if (Test.isExample(entries.get(j)[0], examples)) {
@@ -458,35 +421,27 @@ public class Test {
 								boolean existres = false;
 								for (InterpreterType w : script.rules.values()) {
 									String xtmp = w.execute(entries.get(j)[0]);
-									if (xtmp != null
-											&& xtmp.length() > 0
-											&& xtmp.compareTo(entries.get(j)[1]) == 0) {
+									if (xtmp != null && xtmp.length() > 0 && xtmp.compareTo(entries.get(j)[1]) == 0) {
 										existres = true;
 										break;
 									}
 								}
 								if (existres) {
 									clf_acc_total_cnt++;
-									if (s == null
-											|| s.length() == 0
-											|| s.compareTo(entries.get(j)[1]) != 0) {
+									if (s == null || s.length() == 0 || s.compareTo(entries.get(j)[1]) != 0) {
 										clf_acc_error_cnt++;
 									}
 								}
 								//
 								if (s == null || s.length() == 0) {
-									String[] ts = {
-											"<_START>" + entries.get(j)[0]
-													+ "<_END>", "", tmps,
-											classlabel, "wrong" };
+									String[] ts = { "<_START>" + entries.get(j)[0] + "<_END>", "", tmps, classlabel, "wrong" };
 									xHashMap.put(j + "", ts);
 									wexam = ts;
 									checknumber++;
 								}
 								boolean isfind = false;
 								for (String[] exppair : examples) {
-									if (exppair[0].compareTo("<_START>"
-											+ dict.get("Org") + "<_END>") == 0) {
+									if (exppair[0].compareTo("<_START>" + dict.get("Org") + "<_END>") == 0) {
 										String[] exp = { dict.get("Org"), tmps };
 										if (!expFeData.containsKey(classlabel)) {
 											Vector<String[]> vstr = new Vector<String[]>();
@@ -501,9 +456,7 @@ public class Test {
 								// update positive traing data with user
 								// specification
 								for (String[] tmpx : addExamples) {
-									if (tmpx[0].compareTo(dict.get("Org")) == 0
-											&& tmpx[1].compareTo(dict
-													.get("Tar")) == 0) {
+									if (tmpx[0].compareTo(dict.get("Org")) == 0 && tmpx[1].compareTo(dict.get("Tar")) == 0) {
 										String[] exp = { dict.get("Org"), tmps };
 										if (!expFeData.containsKey(classlabel)) {
 											Vector<String[]> vstr = new Vector<String[]>();
@@ -516,10 +469,7 @@ public class Test {
 									}
 								}
 								if (!isfind) {
-									String[] ts = {
-											"<_START>" + entries.get(j)[0]
-													+ "<_END>", s, tmps,
-											classlabel, "right" };
+									String[] ts = { "<_START>" + entries.get(j)[0] + "<_END>", s, tmps, classlabel, "right" };
 									if (s.compareTo(entries.get(j)[1]) != 0) {
 										ErrorCnt++;
 										wexam = ts;
@@ -529,20 +479,15 @@ public class Test {
 								}
 							}
 
-							if (wexam == null
-									|| (entries.size() - ErrorCnt) * 1.0
-											/ entries.size() == 1.0) {
+							if (wexam == null || (entries.size() - ErrorCnt) * 1.0 / entries.size() == 1.0) {
 								wexam = null;
 								break;
 							}
 							resultString.add(res);
 						}
-						double resultacc = (entries.size() - ErrorCnt) * 1.0
-								/ entries.size();
-						double clf_acc = 1 - clf_acc_error_cnt * 1.0
-								/ clf_acc_total_cnt;
-						System.out.println(""
-								+ psProgSynthesis.myprog.toString());
+						double resultacc = (entries.size() - ErrorCnt) * 1.0 / entries.size();
+						double clf_acc = 1 - clf_acc_error_cnt * 1.0 / clf_acc_total_cnt;
+						System.out.println("" + psProgSynthesis.myprog.toString());
 						System.out.println(pls.get(0).toString());
 						records.put(f.getName() + examples.size(), resultString);
 						long t2 = System.currentTimeMillis();
@@ -554,11 +499,10 @@ public class Test {
 								expsel.inite(xHashMap, expFeData);
 								int e = Integer.parseInt(expsel.Choose());
 								// /
-								//System.out.println("Recommand Example: "+ Arrays.toString(xHashMap.get("" + e)));
+								//System.out.println("Recommand Example: "+Arrays.toString(xHashMap.get("" + e)));
 								// /
 								if (xHashMap.get("" + e)[4].compareTo("right") != 0) {
-									wexp[0] = "<_START>" + entries.get(e)[0]
-											+ "<_END>";
+									wexp[0] = "<_START>" + entries.get(e)[0] + "<_END>";
 									wexp[1] = entries.get(e)[1];
 									break;
 								} else {
@@ -571,24 +515,12 @@ public class Test {
 							}
 
 							examples.add(wexp);
-							FileStat fileStat = new FileStat(f.getName() + "",
-									psProgSynthesis.learnspan,
-									psProgSynthesis.genspan, (t2 - t1),
-									examples.size(), examples,
-									psProgSynthesis.partiCluster.failedCnt,
-									checknumber, iterAfterNoFatalError,
-									psProgSynthesis.myprog.partitions.size(),
-									pls.get(0).toString(), resultacc, clf_acc);
+							FileStat fileStat = new FileStat(f.getName() + "", psProgSynthesis.learnspan, psProgSynthesis.genspan, (t2 - t1), examples.size(), examples,
+									psProgSynthesis.partiCluster.failedCnt, checknumber, iterAfterNoFatalError, psProgSynthesis.myprog.partitions.size(), pls.get(0).toString(), resultacc, clf_acc);
 							dCollection.addEntry(fileStat);
 						} else {
-							FileStat fileStat = new FileStat(f.getName() + "",
-									psProgSynthesis.learnspan,
-									psProgSynthesis.genspan, (t2 - t1),
-									examples.size(), examples,
-									psProgSynthesis.partiCluster.failedCnt,
-									checknumber, iterAfterNoFatalError,
-									psProgSynthesis.myprog.partitions.size(),
-									pls.get(0).toString(), resultacc, clf_acc);
+							FileStat fileStat = new FileStat(f.getName() + "", psProgSynthesis.learnspan, psProgSynthesis.genspan, (t2 - t1), examples.size(), examples,
+									psProgSynthesis.partiCluster.failedCnt, checknumber, iterAfterNoFatalError, psProgSynthesis.myprog.partitions.size(), pls.get(0).toString(), resultacc, clf_acc);
 							dCollection.addEntry(fileStat);
 							dCollection.addSucceededFile(f.getName());
 							break;
@@ -598,7 +530,7 @@ public class Test {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		
+
 		}
 		dCollection.print();
 		dCollection.print1();
@@ -632,29 +564,28 @@ public class Test {
 		EmailNotification notification = new EmailNotification();
 		ExampleCluster.option = method.CP;
 		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
-		notification.notify(true,"CP");
-		
+		notification.notify(true, "CP");
+
 		ExampleCluster.option = method.DPIC;
 		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
-		notification.notify(true,"DPIC");
-
+		notification.notify(true, "DPIC");
 
 		ExampleCluster.option = method.DP;
 		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
-		notification.notify(true,"DP");
+		notification.notify(true, "DP");
 
 		ExampleCluster.option = method.SPIC;
 		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
-		notification.notify(true,"SPIC");
+		notification.notify(true, "SPIC");
 
 		ExampleCluster.option = method.SP;
-		Test.test4("/Users/bowu/Research/testdata/TestSingleFile",false);
-		notification.notify(true,"SP");
+		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
+		notification.notify(true, "SP");
 
 		ExampleCluster.option = method.CPIC;
-		Test.test4("/Users/bowu/Research/testdata/TestSingleFile",false);
-		notification.notify(true,"CPIC");
-		
+		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
+		notification.notify(true, "CPIC");
+
 	}
 
 	public static int MaximalNumber = -1;
@@ -666,15 +597,7 @@ public class Test {
 		ConfigParameters cfg = new ConfigParameters();
 		cfg.initeParameters();
 		DataCollection.config = cfg.getString();
-		//Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
-		//Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
-		//ExampleCluster.option = method.SP;
-		//Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
-		//ExampleCluster.option = method.DP;
-		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", true);
-		//Test.test3("/Users/bowu/Research/testdata/TestSingleFile");
-		 //Test.runSeriseExper();
-		// Test test = new Test();
-		// test.parameterSelection("/Users/bowu/Research/testdata/TestSingleFile");
+		Test.test4("/Users/bowu/Research/testdata/TestSingleFile", false);
+		
 	}
 }

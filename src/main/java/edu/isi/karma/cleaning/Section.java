@@ -63,9 +63,6 @@ public class Section implements GrammarTreeNode {
 					return rule;
 				}
 			}
-			if (rule1.indexOf("null") != -1 && rule2.indexOf("null") != -1) {
-				break;
-			}
 		}
 		this.program = "null";
 		return "null";

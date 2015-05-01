@@ -6,5 +6,5 @@ public interface PartitionClassifierType {
 	public String learnClassifer();
 	public void addTrainingData(String text,double[] values, String label);
 	public String getLabel(String value);
-	public void init();
+	public void init(String[] vocb);
 }

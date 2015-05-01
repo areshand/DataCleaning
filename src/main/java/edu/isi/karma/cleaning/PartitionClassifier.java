@@ -35,21 +35,19 @@ public class PartitionClassifier {
 
 	public PartitionClassifierType create2(Vector<Partition> pars,
 			PartitionClassifierType ele, DataPreProcessor dpp) {
-		ele.init();
+		ele.init(dpp.rfs.vocabs);
 		try {
 			for (int i = 0; i < pars.size(); i++) {
 				Partition partition = pars.get(i);
 				for (int j = 0; j < partition.orgNodes.size(); j++) {
 					String s = UtilTools.print(partition.orgNodes.get(j));
 					String label = partition.label;
-					double[] values = dpp.getNormalizedreScaledVector(s);
-					ele.addTrainingData(s, values, label);
+					ele.addTrainingData(s, label);
 				}
 				for (int j = 0; j < partition.orgUnlabeledData.size(); j++) {
 					String label = partition.label;
 					String s = partition.orgUnlabeledData.get(j);
-					double[] values = dpp.getNormalizedreScaledVector(s);
-					ele.addTrainingData(s, values, label);
+					ele.addTrainingData(s, label);
 				}
 			}
 		} catch (Exception ex) {

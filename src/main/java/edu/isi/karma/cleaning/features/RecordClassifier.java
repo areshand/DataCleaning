@@ -59,7 +59,7 @@ public class RecordClassifier implements PartitionClassifierType {
 			this.nu = 0.01;
 		}	
 	}
-	public void init() {
+	public void init(String[] vocb) {
 		this.trainData = new ArrayList<svm_node[]>();
 		this.targets = new ArrayList<Double>();
 		labelMapping = new HashMap<String, Double>();
@@ -68,6 +68,7 @@ public class RecordClassifier implements PartitionClassifierType {
 		this.minValues = null;
 		this.maxValues = null;
 		this.rf.init();
+		this.rf.addVocabulary(vocb);
 	}
 
 	public void addTrainingData(String v, double[] value, String label) {
@@ -99,13 +100,11 @@ public class RecordClassifier implements PartitionClassifierType {
 		// convert value to feature vector
 		rawData.add(value);
 		Collection<Feature> cfeat = rf.computeFeatures(value, "");
+		feature_cnt = cfeat.size();
 		Feature[] x = cfeat.toArray(new Feature[cfeat.size()]);
 		// row.add(f.getName());
 		svm_node[] testNodes = new svm_node[cfeat.size()];
 		for (int k = 0; k < cfeat.size(); k++) {
-			if (k == 31){
-				System.out.println(""+k);
-			}
 			svm_node node = new svm_node();
 			node.index = k;
 			node.value = x[k].getScore();
@@ -434,7 +433,17 @@ public class RecordClassifier implements PartitionClassifierType {
 		svm_model model = svm.svm_train(problem, parameters);
 		return model;
 	}
-
+	public String getLabel(double[] value){
+		svm_node[] testNodes = new svm_node[value.length];
+		for(int k = 0; k < testNodes.length; k++){
+			svm_node node = new svm_node();
+			node.index = k;
+			node.value = value[k];
+			testNodes[k] = node;
+		}
+		double v = svm.svm_predict(model, testNodes);
+		return findLable(v);
+	}
 	@Override
 	public String getLabel(String value) {
 		Collection<Feature> cfeat = rf.computeFeatures(value, "");
