@@ -15,13 +15,13 @@ public class OutlierDetector {
 	DataPreProcessor dpp;
 	RecordFeatureSet rfs = new RecordFeatureSet();
 	public OutlierDetector() {
-		clf = new RecordClassifier(rfs, svm_parameter.ONE_CLASS);
 	}
 
 	public void train(ArrayList<String> tdata) {
 		dpp = new DataPreProcessor(tdata);
 		dpp.run();
-		
+		rfs.updateVocabulary(dpp.getFeatureName());
+		clf = new RecordClassifier(rfs, svm_parameter.ONE_CLASS);
 		try {
 			for (String text : dpp.data) {
 				double[] values = dpp.getNormalizedreScaledVector(text); 

@@ -90,6 +90,9 @@ public class UtilTools {
 	}
 
 	public static double distance(double[] a, double[] b, double[] w) {
+		if(w == null || w.length == 0 || w.length != a.length){
+			return distance(a, b);
+		}
 		double res = 0.0;
 		for (int i = 0; i < a.length; i++) {
 			res += Math.pow(a[i] - b[i], 2) * w[i];

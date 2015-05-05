@@ -48,6 +48,9 @@ public class DataPreProcessor {
 		resacle(xHashMap);
 		this.data2Vector = xHashMap;
 	}
+	public String[] getFeatureName(){
+		return rfs.xStrings;
+	}
 	public double[] getNormalizedreScaledVector(String data) throws Exception{
 		if(data2Vector.containsKey(data)){
 			return data2Vector.get(data);
