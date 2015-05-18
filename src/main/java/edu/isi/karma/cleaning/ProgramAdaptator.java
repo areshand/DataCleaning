@@ -20,7 +20,7 @@ public class ProgramAdaptator {
 		if (exp2program.containsKey(key2)) {
 			return exp2program.get(key2);
 		}
-		if (examples.size() == 1 || keys.size() == 0) {
+		if (examples.size() == 1 || keys.size()==0) {
 			ExamplePartitions tool = new ExamplePartitions();
 			ArrayList<String[]> tmpKey = new ArrayList<String[]>();
 			tmpKey.add(examples.get(0));
@@ -41,8 +41,12 @@ public class ProgramAdaptator {
 				prog = p1.toProgram();
 				exp2program.put(tK, prog);
 			}
-			keys.add(0);
-			return prog;
+			if(keys.size() != 0){
+				return prog;
+			}
+			else{
+				keys.add(0);
+			}
 		}
 		ArrayList<String[]> inExps = new ArrayList<String[]>();
 		for (Integer i : keys) {

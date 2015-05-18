@@ -67,7 +67,10 @@ public class Tools {
 		Collection<ProgramRule> ps = psProgSynthesis.adaptive_main();
 		if(ps.size() > 0){
 			progRule = ps.iterator().next();
+
 		}
+		System.out.println("" + psProgSynthesis.myprog.toString());
+
 		msger.updateCM_Constr(psProgSynthesis.partiCluster
 				.getConstraints());
 		msger.updateWeights(psProgSynthesis.partiCluster.weights);

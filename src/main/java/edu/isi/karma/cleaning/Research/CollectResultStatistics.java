@@ -6,9 +6,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 
 import edu.isi.karma.cleaning.DataRecord;
+import edu.isi.karma.cleaning.ProgramRule;
+import edu.isi.karma.cleaning.Correctness.FormatOutlier;
 import edu.isi.karma.cleaning.Correctness.MultiviewChecker;
 import au.com.bytecode.opencsv.CSVReader;
 class ErrorCnt{
@@ -17,11 +20,18 @@ class ErrorCnt{
 	int totalrecord = 0;
 	int recommand = 0;
 	int correctrecommand = 0;
+	double reductionRate = -1.0;
+	double precsion = 0.0;
 }
 
 public class CollectResultStatistics {
 	// collect the incorrect but successfully transformed results.
+	public int all_iter_cnt = 0;
+	public int correct_all_iter_cnt = 0;
+	public int all_scenario_cnt = 0;		
+	public int correct_all_scenario_cnt = 0;
 	public MultiviewChecker viewChecker;
+	public FormatOutlier formatChecker;
 	public String collectIncorrects(String fpath) throws IOException {
 		// read a file
 		File f = new File(fpath);
@@ -51,6 +61,7 @@ public class CollectResultStatistics {
 		while (!wrong.isEmpty()) {
 			// select the first one as an example
 			String[] exp = tool.constrExample(wrong.get(0));
+			System.out.println(""+Arrays.toString(exp));
 			examples.add(exp);
 			tool.learnProgramRule(examples);
 			wrong = tool.transformSet(allrec_v2, examples);
@@ -60,17 +71,38 @@ public class CollectResultStatistics {
 			ecnt.runtimeerror = runtimeErrorcnt;
 			ecnt.totalerror = wrong.size();
 			ecnt.totalrecord = allrec.size();
+			all_iter_cnt ++;
+			assignClassLabel(allrec, tool.getProgramRule());
 			if(runtimeErrorcnt == 0){
 				viewChecker = new MultiviewChecker(tool.getProgramRule());
-				ArrayList<DataRecord> recmd = viewChecker.checkRecordCollection(allrec);
+				formatChecker = new FormatOutlier(allrec, null);
+				ArrayList<DataRecord> recmd = new ArrayList<DataRecord>(); 
+				recmd.addAll(viewChecker.checkRecordCollection(allrec));
+				//recmd.addAll(formatChecker.getAllOutliers());
 				ArrayList<DataRecord> crecmd = getCorrectRecommand(recmd, wrong);
 				System.out.println(""+recmd.size());
 				ecnt.recommand = recmd.size();
 				ecnt.correctrecommand = crecmd.size();
+				ecnt.precsion = ecnt.correctrecommand * 1.0 / ecnt.recommand;
+				ecnt.reductionRate = ecnt.recommand *1.0/ecnt.totalrecord;
+				ret += printResult(wrong, ecnt ) + "\n";				
+				if(ecnt.correctrecommand > 0){
+					correct_all_iter_cnt ++;
+				}
 			}
-			ret += printResult(wrong, ecnt ) + "\n";
+			else{
+				correct_all_iter_cnt ++;
+			}
 		}
 		return ret;
+	}
+	public void assignClassLabel(ArrayList<DataRecord> allrec, ProgramRule prog){
+		if(prog.pClassifier == null){
+			return;
+		}
+		for(DataRecord record: allrec){
+			record.classLabel = prog.pClassifier.getLabel(record.origin);
+		}
 	}
 	public ArrayList<DataRecord> getCorrectRecommand(ArrayList<DataRecord> recmd,Vector<String[]> wrong){
 		ArrayList<DataRecord> ret = new ArrayList<DataRecord>();
@@ -90,10 +122,10 @@ public class CollectResultStatistics {
 	}
 	public String printResult(Vector<String[]> wrong, ErrorCnt ecnt) {
 		String s = "";
-		s += String.format("rt, %d, e,%d,t,%d, r,%d, cr, %d,", ecnt.runtimeerror, ecnt.totalerror, ecnt.totalrecord, ecnt.recommand,ecnt.correctrecommand);
-		for (String[] e : wrong) {
+		s += String.format("rt, %d, e,%d,t,%d, r,%d, cr, %d, red, %f, pre, %f", ecnt.runtimeerror, ecnt.totalerror, ecnt.totalrecord, ecnt.recommand,ecnt.correctrecommand,ecnt.reductionRate, ecnt.precsion);
+		/*for (String[] e : wrong) {
 			s += String.format("%s, %s, %s ||", e[0], e[1], e[2]);
-		}
+		}*/
 		return s;
 	}
 
@@ -123,6 +155,8 @@ public class CollectResultStatistics {
 				String line = collector.collectIncorrects(f.getAbsolutePath());
 				bw.write(line+"\n");
 			}
+			System.out.println(String.format("%d, %d", collector.correct_all_iter_cnt, collector.all_iter_cnt));
+			System.out.println("Percentage of correct iteration: "+ (collector.correct_all_iter_cnt * 1.0 / collector.all_iter_cnt));
 			bw.flush();
 			bw.close();
 		} catch (Exception e) {

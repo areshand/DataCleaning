@@ -129,10 +129,34 @@ public class FormatOutlier {
 		double[] vector = dpp.getFeatureArray(genKey(record));			
 		double dist = UtilTools.distance(vector, cmeans.get(record.classLabel), dmetric);
 		//difference STRICTLY bigger than 2 standard deviations [68, 95, 99.7] rule
-		System.out.println(record.origin+": "+dist +", "+ Arrays.toString(mean_var.get(record.classLabel)));
+		//System.out.println(record.origin+": "+dist +", "+ Arrays.toString(mean_var.get(record.classLabel)));
 		if(Math.abs(dist - mean_var.get(record.classLabel)[0]) > 1.8*mean_var.get(record.classLabel)[1])
 		{
 			return true;
+		}
+		//check if it has ambivalent label
+		double[] alldist = new double[cmeans.keySet().size()];
+		int cnt = 0;
+		for(String key : cmeans.keySet()){
+			alldist[cnt] = UtilTools.distance(vector, cmeans.get(key), dmetric);
+			cnt ++;
+		}
+		Arrays.sort(alldist);
+		if(isAmbivalent(alldist)){
+			return true;
+		}
+		return false;
+	}
+	public boolean isAmbivalent (double[] dists){
+		double threshdhold = 0.05; 
+		if(dists.length == 1){
+			return false;
+		}
+		for(int i = 0; i < dists.length -1; i++){
+			double x = 2.0*(dists[i+1] - dists[i]) / (dists[i+1] + dists[i]);
+			if(x < threshdhold){
+				return true;
+			}
 		}
 		return false;
 	}

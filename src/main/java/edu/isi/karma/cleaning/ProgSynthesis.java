@@ -271,13 +271,11 @@ public class ProgSynthesis {
 		StopWatch stopWatch0 = new Log4JStopWatch("adaptive_main");
 		long t1 = System.currentTimeMillis();
 		StopWatch stopWatch = new Log4JStopWatch("adaptive_producePartition");
-		if(orgVector.size() == 5){
-			System.out.println("hello");
-		}
 		Vector<Partition> par = this.adaptive_producePartition();		
 		stopWatch.stop();
 		StopWatch stopWatch1 = new Log4JStopWatch("adaptive_produceProgram");		
-		Collection<ProgramRule> cpr = this.adaptive_produceProgram(par);
+		Collection<ProgramRule> cpr = new ArrayList<ProgramRule>(); 
+		cpr = this.adaptive_produceProgram(par);
 		stopWatch1.stop();
 		Traces.AllSegs.clear();
 		//record the learning time
@@ -336,13 +334,13 @@ public class ProgSynthesis {
 		while (i < prog_cnt) {
 			ProgramRule r = prog.toProgram2(msGer);
 			if (r == null)
-				return null;
+				return rules;
 			String xString = "";
 			int termCnt = 0;
 			boolean findRule = true;
 			while ((xString = this.validRule(r, pars)) != "GOOD" && findRule) {
 				if (xString.compareTo("NO_CLASIF") == 0) {
-					return null; // indistinguishable classes.
+					return rules; // indistinguishable classes.
 				}
 				for (Partition p : prog.partitions) {
 					if (p.label.compareTo(xString) == 0) {
