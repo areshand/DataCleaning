@@ -7,13 +7,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Vector;
 
+import au.com.bytecode.opencsv.CSVReader;
 import edu.isi.karma.cleaning.DataRecord;
 import edu.isi.karma.cleaning.ProgramRule;
+import edu.isi.karma.cleaning.Correctness.AdaInspector;
+import edu.isi.karma.cleaning.Correctness.AdaInspectorTrainer;
 import edu.isi.karma.cleaning.Correctness.FormatOutlier;
+import edu.isi.karma.cleaning.Correctness.Instance;
 import edu.isi.karma.cleaning.Correctness.MultiviewChecker;
-import au.com.bytecode.opencsv.CSVReader;
 class ErrorCnt{
 	int runtimeerror = 0;
 	int totalerror = 0;
@@ -26,15 +33,19 @@ class ErrorCnt{
 
 public class CollectResultStatistics {
 	// collect the incorrect but successfully transformed results.
+	public int all_record_cnt = 0;
+	public int correct_identified_record_cnt = 0;
 	public int all_iter_cnt = 0;
 	public int correct_all_iter_cnt = 0;
 	public int all_scenario_cnt = 0;		
 	public int correct_all_scenario_cnt = 0;
 	public MultiviewChecker viewChecker;
 	public FormatOutlier formatChecker;
+	public AdaInspector inspector = new AdaInspector();
 	public String collectIncorrects(String fpath) throws IOException {
 		// read a file
 		File f = new File(fpath);
+		String ret = "";
 		CSVReader cr = new CSVReader(new FileReader(f), ',', '"', '\0');
 		String[] pair;
 		ArrayList<DataRecord> allrec = new ArrayList<DataRecord>();
@@ -44,40 +55,57 @@ public class CollectResultStatistics {
 			if (pair == null || pair.length <= 1)
 				break;
 			DataRecord tmp = new DataRecord();
-			tmp.id = seqno+"";
+			tmp.id = seqno + "";
 			tmp.origin = pair[0];
 			tmp.target = pair[1];
 			allrec.add(tmp);
 			allrec_v2.add(pair);
-			seqno ++;
+			seqno++;
 		}
 		assert (!allrec.isEmpty());
 		Tools tool = new Tools();
 		tool.init(allrec_v2);
-		Vector<String[]> wrong = new Vector<String[]>();
-		wrong.add(allrec_v2.get(0));
+		PriorityQueue<DataRecord> wrong = new PriorityQueue<DataRecord>();
+		wrong.add(allrec.get(0));
 		Vector<String[]> examples = new Vector<String[]>();
-		String ret = "";
+		ArrayList<String> exampleIDs = new ArrayList<String>();
 		while (!wrong.isEmpty()) {
-			// select the first one as an example
-			String[] exp = tool.constrExample(wrong.get(0));
-			System.out.println(""+Arrays.toString(exp));
+			DataRecord expRec = wrong.poll();
+			String[] exp = this.generateExample(expRec);
+			System.out.println("" + Arrays.toString(exp));
 			examples.add(exp);
+			exampleIDs.add(expRec.id);
 			tool.learnProgramRule(examples);
-			wrong = tool.transformSet(allrec_v2, examples);
 			System.out.println("error cnt: " + wrong.size());
+			assignClassLabel(allrec, exampleIDs, tool.getProgramRule());
 			int runtimeErrorcnt = getFailedCnt(wrong);
 			ErrorCnt ecnt = new ErrorCnt();
 			ecnt.runtimeerror = runtimeErrorcnt;
 			ecnt.totalerror = wrong.size();
 			ecnt.totalrecord = allrec.size();
-			all_iter_cnt ++;
-			assignClassLabel(allrec, tool.getProgramRule());
+			all_iter_cnt++;
+			wrong.clear();
 			if(runtimeErrorcnt == 0){
-				viewChecker = new MultiviewChecker(tool.getProgramRule());
-				formatChecker = new FormatOutlier(allrec, null);
-				ArrayList<DataRecord> recmd = new ArrayList<DataRecord>(); 
-				recmd.addAll(viewChecker.checkRecordCollection(allrec));
+				ArrayList<DataRecord> recmd = new ArrayList<DataRecord>();
+				inspector.initeInspector(tool.dpp, tool.msger, allrec, exampleIDs, tool.progRule);
+				for(DataRecord rec: allrec){
+					//System.out.println(String.format("%f, %f", inspector.getActionLabel(rec), rec.target.compareTo(rec.transformed)==0 ? 1.0: -1.0));
+					double value = inspector.getActionScore(rec);
+					rec.value = value;
+					if(value <= 0){
+						recmd.add(rec);
+					}
+					if(inspector.getActionLabel(rec) == (rec.target.compareTo(rec.transformed)==0 ? 1.0: -1.0)){
+						correct_identified_record_cnt ++;
+					}
+					if(rec.transformed.compareTo(rec.target)!= 0){
+						wrong.add(rec);
+					}
+					all_record_cnt ++;
+				}
+				//viewChecker = new MultiviewChecker(tool.progRule);
+				//formatChecker = new FormatOutlier(allrec, null);
+				//recmd.addAll(viewChecker.checkRecordCollection(allrec));
 				//recmd.addAll(formatChecker.getAllOutliers());
 				ArrayList<DataRecord> crecmd = getCorrectRecommand(recmd, wrong);
 				System.out.println(""+recmd.size());
@@ -85,8 +113,8 @@ public class CollectResultStatistics {
 				ecnt.correctrecommand = crecmd.size();
 				ecnt.precsion = ecnt.correctrecommand * 1.0 / ecnt.recommand;
 				ecnt.reductionRate = ecnt.recommand *1.0/ecnt.totalrecord;
-				ret += printResult(wrong, ecnt ) + "\n";				
-				if(ecnt.correctrecommand > 0){
+				ret += printResult(ecnt)+"\n";
+				if(ecnt.correctrecommand > 0 || wrong.size() == 0){
 					correct_all_iter_cnt ++;
 				}
 			}
@@ -96,31 +124,54 @@ public class CollectResultStatistics {
 		}
 		return ret;
 	}
-	public void assignClassLabel(ArrayList<DataRecord> allrec, ProgramRule prog){
-		if(prog.pClassifier == null){
-			return;
-		}
-		for(DataRecord record: allrec){
-			record.classLabel = prog.pClassifier.getLabel(record.origin);
-		}
+	public String[] generateExample(DataRecord rec) {
+		String[] xStrings = { "<_START>" + rec.origin + "<_END>", rec.target };
+		return xStrings;
 	}
-	public ArrayList<DataRecord> getCorrectRecommand(ArrayList<DataRecord> recmd,Vector<String[]> wrong){
+
+	public PriorityQueue<DataRecord> assignClassLabel(ArrayList<DataRecord> allrec,ArrayList<String> expIds, ProgramRule prog) {
+		PriorityQueue<DataRecord> ret = new PriorityQueue<DataRecord>();
+		if (prog.pClassifier != null) {
+			for (DataRecord record : allrec) {
+				record.classLabel = prog.pClassifier.getLabel(record.origin);
+			}
+		}
+		for(DataRecord rec: allrec){
+			rec.transformed = prog.transform(rec.origin);
+			if(rec.transformed.compareTo(rec.target)!= 0 && !expIds.contains(rec.id)){
+				ret.add(rec);
+			}
+		}
+		return ret;
+
+	}
+
+	public int getFailedCnt(PriorityQueue<DataRecord> wrong) {
+		int cnt = 0;
+		for (DataRecord s : wrong) {
+			if (s.transformed.contains("_FATAL_ERROR_")) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+	public ArrayList<DataRecord> getCorrectRecommand(ArrayList<DataRecord> recmd,PriorityQueue<DataRecord> wrong){
+		HashSet<String> rawInputs = new HashSet<String>();
+		for(DataRecord rec: wrong){
+			if(!rawInputs.contains(rec.origin)){
+				rawInputs.add(rec.origin);
+			}
+		}
 		ArrayList<DataRecord> ret = new ArrayList<DataRecord>();
 		for(DataRecord rec: recmd){
-			boolean matched = false;
-			for(String[] elem: wrong){
-				if(elem[0].compareTo(rec.origin) == 0){
-					matched = true;
-					break;
-				}
-			}
-			if(matched){
+			boolean matched = false;		 
+			if(rawInputs.contains(rec.origin)){
 				ret.add(rec);
 			}
 		}
 		return ret;
 	}
-	public String printResult(Vector<String[]> wrong, ErrorCnt ecnt) {
+	public String printResult(ErrorCnt ecnt) {
 		String s = "";
 		s += String.format("rt, %d, e,%d,t,%d, r,%d, cr, %d, red, %f, pre, %f", ecnt.runtimeerror, ecnt.totalerror, ecnt.totalrecord, ecnt.recommand,ecnt.correctrecommand,ecnt.reductionRate, ecnt.precsion);
 		/*for (String[] e : wrong) {
@@ -129,21 +180,15 @@ public class CollectResultStatistics {
 		return s;
 	}
 
-	public int getFailedCnt(Vector<String[]> wrong) {
-		int cnt = 0;
-		for (String[] s : wrong) {
-			if (s[2].contains("_FATAL_ERROR_")) {
-				cnt++;
-			}
-		}
-		return cnt;
-	}
-
-	public static void main(String[] args) {
+	public double[] parameterSelection(double parameter){
 		String dirpath = "/Users/bowu/Research/testdata/TestSingleFile/";
 		File nf = new File(dirpath);
 		File[] allfiles = nf.listFiles();
-		CollectResultStatistics collector = new CollectResultStatistics();
+		AdaInspectorTrainer.questionablePreference = parameter;
+		double[] ret = {0, 0};
+		inspector = new AdaInspector();
+		inspector.initeParameter();
+		String line = "";
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(
 					"/Users/bowu/Research/Feedback/result.txt")));
@@ -152,16 +197,29 @@ public class CollectResultStatistics {
 					continue;
 				}
 				bw.write(f.getName()+"\n");
-				String line = collector.collectIncorrects(f.getAbsolutePath());
-				bw.write(line+"\n");
+				line = collectIncorrects(f.getAbsolutePath())+"\n";
+				bw.write(line);
 			}
-			System.out.println(String.format("%d, %d", collector.correct_all_iter_cnt, collector.all_iter_cnt));
-			System.out.println("Percentage of correct iteration: "+ (collector.correct_all_iter_cnt * 1.0 / collector.all_iter_cnt));
+			
+			System.out.println(String.format("%d, %d, %f", correct_identified_record_cnt, all_record_cnt, correct_identified_record_cnt*1.0/all_record_cnt));
+			System.out.println(String.format("%d, %d", correct_all_iter_cnt, all_iter_cnt) +", Percentage of correct iteration: "+ (correct_all_iter_cnt * 1.0 / all_iter_cnt));
+			ret[0] = correct_all_iter_cnt * 1.0 / all_iter_cnt;
+			ret[1] = correct_identified_record_cnt*1.0/all_record_cnt;
 			bw.flush();
 			bw.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return ret;
+	}
+	public static void main(String[] args) {
+		String ret = "";
+		for(double p = 4; p <= 4; p = p+2){
+			CollectResultStatistics collect = new CollectResultStatistics();
+			double[] one = collect.parameterSelection(p);
+			ret += String.format("%f, %f, %f", p, one[0], one[1])+"\n";
+		}
+		System.out.println(""+ret);
 	}
 
 }
